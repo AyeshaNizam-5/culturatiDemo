@@ -13,7 +13,7 @@ export const ENDPOINTS = {
     CREATE: '/institutions',
     UPDATE: (id) => `/institutions/${id}`,
     DELETE: (id) => `/institutions/${id}`,
-    TYPES: '/institutions/types', // For getting institution types from backend
+    TYPES: '/institutions/types',
   },
   USERS: {
     BASE: '/users',
@@ -23,6 +23,14 @@ export const ENDPOINTS = {
     UPDATE: (id) => `/users/${id}`,
     DELETE: (id) => `/users/${id}`,
     CHECK_USERNAME: '/users/check-username',
-    ROLES: '/users/roles', // For getting user roles from backend
-  }
+    ROLES: '/users/roles',
+  },
+  CATEGORIES: {
+    BASE: '/categories',
+    GET_ALL: '/categories',
+    GET_BY_ID: (id) => `/categories/${id}`,
+    CREATE: '/categories',
+    UPDATE: (id) => `/categories/${id}`,
+    DELETE: (id) => `/categories/${id}`,
+  },
 };
