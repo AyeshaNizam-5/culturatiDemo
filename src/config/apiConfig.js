@@ -33,4 +33,12 @@ export const ENDPOINTS = {
     UPDATE: (id) => `/categories/${id}`,
     DELETE: (id) => `/categories/${id}`,
   },
+  LEVELS: {
+    BASE: '/levels',
+    GET_ALL: '/levels',
+    GET_BY_ID: (id) => `/levels/${id}`,
+    CREATE: '/levels',
+    UPDATE: (id) => `/levels/${id}`,
+    DELETE: (id) => `/levels/${id}`,
+  },
 };
