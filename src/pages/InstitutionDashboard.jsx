@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Outlet, useNavigate } from 'react-router-dom';
-import { Pencil } from 'lucide-react';
 import institutionService from '../services/institutionService';
 import InstitutionForm from '../components/InstitutionForm';
 
@@ -46,7 +45,7 @@ const InstitutionDashboard = () => {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">
+        <h1 className="text-2xl font-bold text-[#5ec5f1]">
           {institution.institutionName}
         </h1>
         <p className="text-gray-400">{institution.institutionCode}</p>

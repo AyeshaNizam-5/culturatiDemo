@@ -53,7 +53,7 @@ const Dashboard = ({ children }) => {
 
         <button 
           onClick={() => navigate('/institutions')}
-          className="flex items-center gap-2 px-4 py-2 text-gray-400 hover:text-white mb-6"
+          className="flex items-center gap-2 px-4 py-2 text-[#0b6085] hover:text-white mb-6"
         >
           <ArrowLeft size={20} />
           Back to Institutions

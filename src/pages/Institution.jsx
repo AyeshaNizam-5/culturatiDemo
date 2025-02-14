@@ -48,8 +48,8 @@ const Institution = () => {
 
   return (
     <div className="space-y-8">
-      <div className="bg-[#1e293b] rounded-xl p-6 shadow-lg border border-gray-800">
-        <h2 className="text-2xl font-bold text-white mb-6">Institution Details</h2>
+      <div className="bg-[#eff8fb] rounded-xl p-6 shadow-lg ">
+        <h2 className="text-2xl font-bold text-[#0b6085] mb-6">Institution Details</h2>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Information */}
@@ -63,7 +63,7 @@ const Institution = () => {
                 name="institutionName"
                 value={formData.institutionName}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2.5 bg-[#0f172a] rounded-lg text-white 
+                className="w-full px-4 py-2.5 bg-[white] rounded-lg text-[#0b6085] 
                          border border-gray-700 focus:outline-none focus:ring-2 
                          focus:ring-blue-500 focus:border-transparent"
               />
@@ -78,7 +78,7 @@ const Institution = () => {
                 name="institutionCode"
                 value={formData.institutionCode}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2.5 bg-[#0f172a] rounded-lg text-white 
+                className="w-full px-4 py-2.5 bg-[white] rounded-lg text-white 
                          border border-gray-700 focus:outline-none focus:ring-2 
                          focus:ring-blue-500 focus:border-transparent"
               />
@@ -93,7 +93,7 @@ const Institution = () => {
               name="type"
               value={formData.type}
               onChange={handleInputChange}
-              className="w-full px-4 py-2.5 bg-[#0f172a] rounded-lg text-white 
+              className="w-full px-4 py-2.5 bg-[white] rounded-lg text- [#0b6085]
                        border border-gray-700 focus:outline-none focus:ring-2 
                        focus:ring-blue-500 focus:border-transparent"
             >
@@ -112,17 +112,17 @@ const Institution = () => {
               Logo
             </label>
             <div className="flex items-center gap-4">
-              <div className="w-20 h-20 bg-[#0f172a] rounded-lg overflow-hidden border border-gray-700">
+              <div className="w-20 h-20 bg-[white] rounded-lg overflow-hidden border border-gray-700">
                 <img 
                   src={formData.logo instanceof File ? URL.createObjectURL(formData.logo) : institution.logo}
                   alt="Logo Preview"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <label className="flex items-center gap-2 px-4 py-2 bg-[#0f172a] rounded-lg 
-                             cursor-pointer hover:bg-[#1a2234] transition-colors border border-gray-700">
-                <Upload size={20} className="text-gray-400" />
-                <span className="text-gray-400">Upload Logo</span>
+              <label className="flex items-center gap-2 px-4 py-2 bg-[#94d0ea] rounded-lg 
+                             cursor-pointer hover:bg-[#eef7fa] transition-colors border border-gray-700">
+                <Upload size={20} className="text-[#0b6085]" />
+                <span className="text-[#0b6085]">Upload Logo</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -139,17 +139,17 @@ const Institution = () => {
               Cover Image
             </label>
             <div className="flex items-center gap-4">
-              <div className="w-40 h-24 bg-[#0f172a] rounded-lg overflow-hidden border border-gray-700">
+              <div className="w-40 h-24 bg-[#94d0ea] rounded-lg overflow-hidden border border-gray-700">
                 <img 
                   src={formData.image instanceof File ? URL.createObjectURL(formData.image) : institution.image}
                   alt="Cover Preview"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <label className="flex items-center gap-2 px-4 py-2 bg-[#0f172a] rounded-lg 
-                             cursor-pointer hover:bg-[#1a2234] transition-colors border border-gray-700">
-                <Upload size={20} className="text-gray-400" />
-                <span className="text-gray-400">Upload Cover Image</span>
+              <label className="flex items-center gap-2 px-4 py-2 bg-[#94d0ea] rounded-lg 
+                             cursor-pointer hover:bg-[#eef7fa] transition-colors border border-gray-700">
+                <Upload size={20} className="text-[#0b6085]" />
+                <span className="text-[#0b6085]">Upload Cover Image</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -165,8 +165,8 @@ const Institution = () => {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 rounded-lg 
-                       text-white font-medium transition-colors disabled:opacity-50"
+              className="px-6 py-2.5 bg-[#94d0ea] hover:bg-[#eef7fa] rounded-lg 
+                       text-[#0b6085] font-medium transition-colors disabled:opacity-50 border border-[#6797a7]"
             >
               {loading ? 'Saving...' : 'Save Changes'}
             </button>

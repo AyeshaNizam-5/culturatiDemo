@@ -1,17 +1,17 @@
 .dashboardContainer {
   display: flex;
   min-height: 100vh;
-  background-color: #0f172a;
+  background-color: #e2edee;
 }
 
 .sidebar {
   width: 280px;
-  background-color: #1e293b;
+  background-color: #dcedf1;
   padding: 24px;
   color: white;
   position: fixed;
   height: 100vh;
-  border-right: 1px solid #334155;
+  border-right: 1px solid #adf1f6;
 }
 
 .logo {
@@ -30,7 +30,7 @@
 .logo h2 {
   font-size: 24px;
   font-weight: 600;
-  color: white;
+  color: #5ec5f1;
 }
 
 .navList {
@@ -47,7 +47,7 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  color: #94a3b8;
+  color: #0b6085;
   text-decoration: none;
   border-radius: 8px;
   transition: all 0.2s;
@@ -55,7 +55,7 @@
 }
 
 .navLink:hover {
-  background-color: #334155;
+  background-color: #b5dbe3;
   color: white;
 }
 
@@ -73,7 +73,7 @@
   margin-top: 24px;
   background: none;
   border: none;
-  color: #94a3b8;
+  color: #0d536b;
   cursor: pointer;
   font-size: 16px;
   font-weight: 500;
