@@ -3,6 +3,7 @@ import { Plus, Pencil, Trash2, Search } from 'lucide-react';
 import LevelForm from '../components/CreateLevelForm';
 import Pagination from '../components/Pagination';
 import ConfirmDialog from '../components/ConfirmDialog';
+import { useParams, useOutletContext } from 'react-router-dom';
 // import levelService from '../services/levelService';
 
 const Levels = () => {
@@ -22,6 +23,9 @@ const Levels = () => {
   });
   
   const itemsPerPage = 5;
+
+  const { institutionId } = useParams();
+  const { institution } = useOutletContext();
 
   // useEffect(() => {
   //   fetchCategories();
@@ -50,14 +54,13 @@ const Levels = () => {
   };
 
   const handleDeleteConfirm = async () => {
-    // try {
-    //   await categoryService.delete(deleteDialog.categoryId);
-    //   fetchCategories();
-    // } catch (err) {
-    //   console.error('Error deleting category:', err);
-    // }
-    setLevels(levels.filter(cat => cat.id !== deleteDialog.levelId));
-    setDeleteDialog({ isOpen: false, levelIdId: null, levelName: '' });
+    try {
+      await levelService.delete(deleteDialog.levelId, institutionId);
+      fetchLevels();
+    } catch (err) {
+      console.error('Error deleting level:', err);
+    }
+    setDeleteDialog({ isOpen: false, levelId: null, levelName: '' });
   };
 
   const handleCloseForm = () => {
@@ -75,13 +78,27 @@ const Levels = () => {
     currentPage * itemsPerPage
   );
 
-  const handleSubmit = (formData) => {
-    if (selectedLevel) {
-      setLevels(levels.map(cat => (cat.id === formData.id ? formData : cat)));
-    } else {
-      setLevels([...levels, formData]);
+  const handleSubmit = async (formData) => {
+    try {
+      if (selectedLevel) {
+        await levelService.update(selectedLevel.id, formData, institutionId);
+      } else {
+        await levelService.create(formData, institutionId);
+      }
+      fetchLevels();
+      handleCloseForm();
+    } catch (err) {
+      console.error('Error saving level:', err);
     }
-    handleCloseForm();
+  };
+
+  const fetchLevels = async () => {
+    try {
+      const response = await levelService.getAll(institutionId);
+      setLevels(response.data);
+    } catch (err) {
+      console.error('Failed to fetch levels:', err);
+    }
   };
 
   return (

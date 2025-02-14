@@ -4,8 +4,11 @@ import UserForm from '../components/UserForm';
 import Pagination from '../components/Pagination';
 import ConfirmDialog from '../components/ConfirmDialog';
 import userService from '../services/userService';
+import { useParams, useOutletContext } from 'react-router-dom';
 
 const Users = () => {
+  const { institutionId } = useParams();
+  const { institution } = useOutletContext();
   const [users, setUsers] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -23,12 +26,12 @@ const Users = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [institutionId]);
 
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await userService.getAll();
+      const response = await userService.getAll(institutionId);
       setUsers(response.data);
     } catch (err) {
       setError('Failed to fetch users');
@@ -41,9 +44,9 @@ const Users = () => {
   const handleSubmit = async (formData) => {
     try {
       if (selectedUser) {
-        await userService.update(selectedUser.id, formData);
+        await userService.update(selectedUser.id, formData, institutionId);
       } else {
-        await userService.create(formData);
+        await userService.create(formData, institutionId);
       }
       fetchUsers();
       handleCloseForm();
@@ -62,7 +65,7 @@ const Users = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      await userService.delete(deleteDialog.userId);
+      await userService.delete(deleteDialog.userId, institutionId);
       fetchUsers();
       setDeleteDialog({ isOpen: false, userId: null, userName: '' });
     } catch (err) {
@@ -99,7 +102,7 @@ const Users = () => {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2">Users</h1>
-            <p className="text-gray-400">Manage system users and their permissions</p>
+            <p className="text-gray-400">Manage users for {institution.institutionName}</p>
           </div>
           <button 
             onClick={() => setIsFormOpen(true)}

@@ -1,7 +1,7 @@
 import api from './api';
 import { ENDPOINTS } from '../config/apiConfig';
 
-// Mock user data
+// Mock user data with institution IDs
 const mockUsers = [
   {
     id: 1,
@@ -10,7 +10,7 @@ const mockUsers = [
     username: "johndoe",
     email: "john@example.com",
     role: "Content Creator",
-    institution: "National Museum of History",
+    institutionId: 1,
     status: "Active"
   },
   {
@@ -20,30 +20,30 @@ const mockUsers = [
     username: "janesmith",
     email: "jane@example.com",
     role: "Editor",
-    institution: "Royal Heritage Castle",
+    institutionId: 2,
     status: "Active"
   }
 ];
 
 const userService = {
-  getAll: async (params = {}) => {
+  getAll: async (institutionId) => {
     try {
-      const response = await api.get(ENDPOINTS.USERS.GET_ALL, { params });
-      return response.data;
+      // Only returns users for the specific institution
+      const filteredUsers = mockUsers.filter(user => user.institutionId === parseInt(institutionId));
+      return Promise.resolve({ data: filteredUsers });
     } catch (error) {
       console.error('Error fetching users:', error);
       throw error;
     }
   },
 
-  create: async (userData) => {
+  create: async (userData, institutionId) => {
     try {
-      // Uncomment when backend is ready
-      // const response = await api.post('/users', userData);
-      // return response.data;
+      // Automatically assigns the institution
       const newUser = {
         id: mockUsers.length + 1,
         ...userData,
+        institutionId: parseInt(institutionId),
         status: 'Active'
       };
       mockUsers.push(newUser);
@@ -54,12 +54,10 @@ const userService = {
     }
   },
 
-  update: async (id, userData) => {
+  update: async (id, userData, institutionId) => {
     try {
-      // Uncomment when backend is ready
-      // const response = await api.put(`/users/${id}`, userData);
-      // return response.data;
-      const index = mockUsers.findIndex(u => u.id === id);
+      // Only updates users belonging to the institution
+      const index = mockUsers.findIndex(u => u.id === id && u.institutionId === parseInt(institutionId));
       if (index !== -1) {
         mockUsers[index] = { ...mockUsers[index], ...userData };
         return Promise.resolve({ data: mockUsers[index] });
@@ -71,12 +69,9 @@ const userService = {
     }
   },
 
-  delete: async (id) => {
+  delete: async (id, institutionId) => {
     try {
-      // Uncomment when backend is ready
-      // await api.delete(`/users/${id}`);
-      // return true;
-      const index = mockUsers.findIndex(u => u.id === id);
+      const index = mockUsers.findIndex(u => u.id === id && u.institutionId === parseInt(institutionId));
       if (index !== -1) {
         mockUsers.splice(index, 1);
         return Promise.resolve({ success: true });
@@ -86,40 +81,7 @@ const userService = {
       console.error('Error deleting user:', error);
       throw error;
     }
-  },
-
-  checkUsername: async (username) => {
-    try {
-      // Uncomment when backend is ready
-      // const response = await api.post('/users/check-username', { username });
-      // return response.data;
-      const exists = mockUsers.some(u => u.username === username);
-      return Promise.resolve({ exists });
-    } catch (error) {
-      console.error('Error checking username:', error);
-      throw error;
-    }
-  },
-
-  getRoles: async () => {
-    try {
-      const response = await api.get(ENDPOINTS.USERS.ROLES);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching user roles:', error);
-      throw error;
-    }
   }
 };
 
-// For development only - will be removed in production
-if (import.meta.env.DEV) {
-  // Mock data here
-  const mockUsers = [/* ... */];
-  
-  // Override methods with mock data in development
-  userService.getAll = async () => ({ data: mockUsers });
-  // ... other mock method overrides
-}
-
-export default userService; 
+export default userService;

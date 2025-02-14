@@ -12,8 +12,7 @@ const UserForm = ({ user, onClose, onSubmit }) => {
       password: "",
       confirmPassword: "",
       email: "",
-      role: "",
-      institution: ""
+      role: ""
     }
   );
   const [errors, setErrors] = useState({});
@@ -41,7 +40,6 @@ const UserForm = ({ user, onClose, onSubmit }) => {
     }
     if (!formData.email) newErrors.email = 'Email is required';
     if (!formData.role) newErrors.role = 'Role is required';
-    if (!formData.institution) newErrors.institution = 'Institution is required';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -55,11 +53,11 @@ const UserForm = ({ user, onClose, onSubmit }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-[#1e293b] rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+      <div className="bg-[#1e293b] rounded-lg w-full max-w-2xl border border-gray-700">
         <div className="flex justify-between items-center p-6 border-b border-gray-700">
           <h2 className="text-xl font-semibold text-white">
-            {user ? 'Edit User' : 'Create User'}
+            {user ? 'Edit User' : 'Create New User'}
           </h2>
           <button onClick={onClose} className="text-gray-400 hover:text-white">
             <X size={24} />
@@ -152,23 +150,6 @@ const UserForm = ({ user, onClose, onSubmit }) => {
               <option value="Admin">Admin</option>
             </select>
             {errors.role && <p className="text-red-500 text-sm mt-1">{errors.role}</p>}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">Institution</label>
-            <select
-              value={formData.institution}
-              onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
-              className="w-full bg-[#0f172a] rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 outline-none"
-            >
-              <option value="">Select Institution</option>
-              {institutions.map(inst => (
-                <option key={inst.id} value={inst.institutionName}>
-                  {inst.institutionName}
-                </option>
-              ))}
-            </select>
-            {errors.institution && <p className="text-red-500 text-sm mt-1">{errors.institution}</p>}
           </div>
 
           <div className="flex justify-end gap-4 mt-6">

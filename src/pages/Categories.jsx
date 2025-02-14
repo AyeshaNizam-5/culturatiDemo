@@ -3,6 +3,7 @@ import { Plus, Pencil, Trash2, Search } from 'lucide-react';
 import CategoryForm from '../components/CreateCategoryForm';
 import Pagination from '../components/Pagination';
 import ConfirmDialog from '../components/ConfirmDialog';
+import { useParams, useOutletContext } from 'react-router-dom';
 // import categoryService from '../services/categoryService';
 
 const Categories = () => {
@@ -23,18 +24,17 @@ const Categories = () => {
   
   const itemsPerPage = 5;
 
-  // useEffect(() => {
-  //   fetchCategories();
-  // }, []);
+  const { institutionId } = useParams();
+  const { institution } = useOutletContext();
 
-  // const fetchCategories = async () => {
-  //   try {
-  //     const response = await categoryService.getAll();
-  //     setCategories(response.data);
-  //   } catch (err) {
-  //     console.error('Failed to fetch categories:', err);
-  //   }
-  // };
+  const fetchCategories = async () => {
+    try {
+      const response = await categoryService.getAll(institutionId);
+      setCategories(response.data);
+    } catch (err) {
+      console.error('Failed to fetch categories:', err);
+    }
+  };
 
   const handleEdit = (category) => {
     setSelectedCategory(category);
@@ -50,13 +50,12 @@ const Categories = () => {
   };
 
   const handleDeleteConfirm = async () => {
-    // try {
-    //   await categoryService.delete(deleteDialog.categoryId);
-    //   fetchCategories();
-    // } catch (err) {
-    //   console.error('Error deleting category:', err);
-    // }
-    setCategories(categories.filter(cat => cat.id !== deleteDialog.categoryId));
+    try {
+      await categoryService.delete(deleteDialog.categoryId, institutionId);
+      fetchCategories();
+    } catch (err) {
+      console.error('Error deleting category:', err);
+    }
     setDeleteDialog({ isOpen: false, categoryId: null, categoryName: '' });
   };
 
@@ -75,13 +74,18 @@ const Categories = () => {
     currentPage * itemsPerPage
   );
 
-  const handleSubmit = (formData) => {
-    if (selectedCategory) {
-      setCategories(categories.map(cat => (cat.id === formData.id ? formData : cat)));
-    } else {
-      setCategories([...categories, formData]);
+  const handleSubmit = async (formData) => {
+    try {
+      if (selectedCategory) {
+        await categoryService.update(selectedCategory.id, formData, institutionId);
+      } else {
+        await categoryService.create(formData, institutionId);
+      }
+      fetchCategories();
+      handleCloseForm();
+    } catch (err) {
+      console.error('Error saving category:', err);
     }
-    handleCloseForm();
   };
 
   return (
