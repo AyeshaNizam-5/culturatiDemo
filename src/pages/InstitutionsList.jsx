@@ -10,21 +10,21 @@ import ConfirmDialog from '../components/ConfirmDialog';
 const InstitutionCard = ({ institution, onDelete, onSelect }) => (
   <div 
     onClick={() => onSelect(institution)}
-    className="bg-[#1e293b] rounded-lg overflow-hidden shadow-lg hover:shadow-xl 
+    className="bg-[#e5e8ee] rounded-lg overflow-hidden shadow-lg hover:shadow-xl 
               transition-all transform hover:-translate-y-1 border border-gray-800 cursor-pointer"
   >
-    <div className="h-48 bg-[#0f172a] relative">
+    <div className="h-35  bg-[#dbdfe8] relative">
       <img 
         src={institution.image} 
         alt={institution.institutionName}
         className="w-full h-full object-cover opacity-80"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#93d4e7] to-transparent" />
     </div>
 
     <div className="p-6">
       <div className="flex items-center gap-4 mb-4">
-        <div className="w-16 h-16 bg-[#0f172a] rounded-lg overflow-hidden shadow-md border border-gray-800">
+        <div className="w-16 h-16 bg-[#dfe4f1] rounded-lg overflow-hidden shadow-md border border-gray-800">
           <img 
             src={institution.logo}
             alt={`${institution.institutionName} logo`}
@@ -32,13 +32,13 @@ const InstitutionCard = ({ institution, onDelete, onSelect }) => (
           />
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-white">{institution.institutionName}</h3>
+          <h3 className="text-xl font-semibold text-black">{institution.institutionName}</h3>
           <p className="text-gray-400 text-sm">{institution.institutionCode}</p>
         </div>
       </div>
 
       <div className="flex items-center justify-between">
-        <span className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm font-medium">
+        <span className="px-3 py-1 bg-[#ffffff] text-[#5ec5f1] rounded-full text-sm font-medium">
           {institution.type}
         </span>
         <button 
@@ -46,7 +46,7 @@ const InstitutionCard = ({ institution, onDelete, onSelect }) => (
             e.stopPropagation();
             onDelete(institution);
           }}
-          className="p-2 hover:bg-[#0f172a] rounded-lg transition-colors text-red-400 hover:text-red-300"
+          className="p-2 hover:bg-[#c49782] rounded-lg transition-colors text-red-400 hover:text-red-300"
         >
           <Trash2 size={16} />
         </button>
@@ -146,23 +146,23 @@ const InstitutionsList = () => {
     currentPage * itemsPerPage
   );
 
-  if (loading) return <div className="min-h-screen bg-[#0f172a] text-white p-8">Loading...</div>;
-  if (error) return <div className="min-h-screen bg-[#0f172a] text-white p-8">Error: {error}</div>;
+  if (loading) return <div className="min-h-screen bg-[#e2e5ec] text-[#5ec5f1] p-8">Loading...</div>;
+  if (error) return <div className="min-h-screen bg-[#e2e5ec] text-[#5ec5f1] p-8">Error: {error}</div>;
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white p-8">
+    <div className="min-h-screen bg-[#f5fafa] text-[#5ec5f1] p-8">
       <div className="space-y-8 max-w-7xl mx-auto">
         {/* Header Card */}
-        <div className="bg-[#1e293b] rounded-xl p-6 shadow-lg border border-gray-800">
+        <div className="bg-[#f3f3f3] rounded-xl p-6 shadow-lg border border-gray-800">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">Cultural Institutions</h1>
-              <p className="text-gray-400">Select an institution to manage its content</p>
+              <h1 className="text-3xl font-bold text-[#5ec5f1] mb-2">Cultural Institutions</h1>
+              <p className="text-[#6193a9]">Select an institution to manage its content</p>
             </div>
             <button 
               onClick={() => setIsFormOpen(true)}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg 
-                       transition-colors text-white font-medium shadow-lg"
+              className="flex items-center gap-2 bg-white hover:bg-[#a6eef0] px-4 py-2 rounded-lg 
+                       transition-colors text-[#70b5d2] font-medium shadow-lg"
             >
               <Plus size={20} />
               Add Institution
