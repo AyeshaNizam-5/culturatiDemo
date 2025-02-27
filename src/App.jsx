@@ -1,39 +1,78 @@
-import React from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { Provider } from 'react-redux'
-import { store } from './store/store'
+// src/App.jsx
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/Dashboard/Dashboard';
+import InstitutionsList from './pages/institution/InstitutionsList';
+import InstitutionDashboard from './pages/institution/InstitutionDashboard';
+import Institution from './components/Institution';
 import ProtectedRoute from './components/ProtectedRoute';
-import Institution from './components/Institution'
 
 const App = () => {
-
-  const DashboardRoute = ({ children }) => (
-    <ProtectedRoute>
-      <Dashboard>{children}</Dashboard>
-    </ProtectedRoute>
-  )
   return (
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<Login />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        {/* <Route path="institution" element={<Institution />} />
-            <Route path="users" element={<Users />} />
-            <Route path="levels" element={<Levels />} />
-            <Route path="categories" element={<Categories />} /> */}
-            <Route path="settings" element={<div>Settings page coming soon</div>} />
+          {/* Public Routes */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<Login />} />
+
+          {/* SuperAdmin Dashboard */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['super_admin']}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Dashboard */}
+          <Route
+            path="/dashboard/admin"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Content Creator Dashboard */}
+          <Route
+            path="/dashboard/content-creator"
+            element={
+              <ProtectedRoute allowedRoles={['content_creator']}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Institutions List - SuperAdmin Only */}
+          <Route
+            path="/institutions"
+            element={
+              <ProtectedRoute allowedRoles={['super_admin']}>
+                <InstitutionsList />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Nested Routes for InstitutionDashboard */}
+          <Route
+            path="/institution/:institutionId"
+            element={
+              <ProtectedRoute allowedRoles={['super_admin', 'admin']}>
+                <InstitutionDashboard />
+              </ProtectedRoute>
+            }
+          >
             <Route path="institution" element={<Institution />} />
+          </Route>
+
+          {/* Catch-all Route */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
     </Provider>

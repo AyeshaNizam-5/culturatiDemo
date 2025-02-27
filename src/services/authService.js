@@ -1,3 +1,5 @@
+// src/services/authService.js
+
 const mockUsers = [
   { id: 1, username: "superadmin", password: "superadmin123", role: "super_admin" },
   { id: 2, username: "admin", password: "admin123", role: "admin" },
@@ -9,16 +11,23 @@ const mockUsers = [
 const authService = {
   login: async (credentials) => {
     try {
-      
       const user = mockUsers.find(
         (u) => u.username === credentials.username && u.password === credentials.password
       );
 
       if (user) {
         const token = "mock-jwt-token";
+        
+        // Normalize role to lowercase before storing
+        const normalizedUser = {
+          ...user,
+          role: user.role.toLowerCase()
+        };
+
         localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
-        return { user, token };
+        localStorage.setItem('user', JSON.stringify(normalizedUser));
+        
+        return { user: normalizedUser, token };
       }
 
       throw new Error('Invalid credentials');
@@ -35,6 +44,12 @@ const authService = {
   isAuthenticated: () => {
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
+
+    // Normalize role before returning
+    if (user && user.role) {
+      user.role = user.role.toLowerCase();
+    }
+
     return token ? { user, token } : null;
   }
 };

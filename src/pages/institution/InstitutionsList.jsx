@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
-import InstitutionForm from '../components/InstitutionForm';
-import InstitutionFilters from '../components/InstitutionFilters';
-import Pagination from '../components/Pagination';
-import institutionService from '../services/institutionService';
-import ConfirmDialog from '../components/ConfirmDialog';
+import InstitutionForm from '../../components/InstitutionForm';
+import InstitutionFilters from '../../components/InstitutionFilters';
+import Pagination from '../../components/Pagination';
+import institutionService from '../../services/institutionService';
+import ConfirmDialog from '../../components/ConfirmDialog';
 
 const InstitutionCard = ({ institution, onDelete, onSelect }) => (
   <div 
@@ -91,8 +91,7 @@ const InstitutionsList = () => {
   };
 
   const handleSelectInstitution = (institution) => {
-    
-    navigate(`/institution`);
+    navigate(`/institution/${institution.id}/institution`);
   };
 
   const handleDeleteClick = (institution) => {
