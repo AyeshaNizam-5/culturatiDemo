@@ -1,9 +1,8 @@
-// src/pages/Dashboard/Dashboard.jsx
 import React, { Suspense, lazy } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { Navigate, useNavigate } from 'react-router-dom';
 
-// Lazy Loading for better performance
+
 const SuperAdminDashboard = lazy(() => import('./SuperAdminDashboard'));
 const AdminDashboard = lazy(() => import('./AdminDashboard'));
 const ContentCreatorDashboard = lazy(() => import('./ContentCreatorDashboard'));
@@ -20,7 +19,7 @@ const Dashboard = () => {
     return <div>Loading...</div>;
   }
 
-  // Navigate to role-specific dashboard
+ 
   switch (role) {
     case 'super_admin':
       return (

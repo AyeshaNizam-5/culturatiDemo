@@ -9,6 +9,9 @@ import InstitutionsList from './pages/institution/InstitutionsList';
 import InstitutionDashboard from './pages/institution/InstitutionDashboard';
 import Institution from './components/Institution';
 import ProtectedRoute from './components/ProtectedRoute';
+import Categories from './pages/Categories'
+import Levels from './pages/Levels'
+import Users from './pages/Users'
 
 const App = () => {
   return (
@@ -18,6 +21,7 @@ const App = () => {
           {/* Public Routes */}
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
+          <Route path="settings" element={<div>Settings page coming soon</div>} />
 
           {/* SuperAdmin Dashboard */}
           <Route
@@ -69,6 +73,11 @@ const App = () => {
             }
           >
             <Route path="institution" element={<Institution />} />
+            <Route path="institution" element={<Institution />} />
+            <Route path="users" element={<Users />} />
+            <Route path="levels" element={<Levels />} />
+            <Route path="categories" element={<Categories />} />
+            <Route path="settings" element={<div>Settings page coming soon</div>} />
           </Route>
 
           {/* Catch-all Route */}

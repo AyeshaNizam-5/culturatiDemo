@@ -1,8 +1,9 @@
-// src/pages/Institution/InstitutionDashboard.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, Outlet, useNavigate, Link } from 'react-router-dom';
 import institutionService from '../../services/institutionService';
 import InstitutionForm from '../../components/InstitutionForm';
+import Navbar from '../../components/Navbar';
+import { Building2, Settings, ArrowLeftFromLine,LayersIcon,FolderTree, Users } from 'lucide-react';
 
 const InstitutionDashboard = () => {
   const { institutionId } = useParams();
@@ -42,9 +43,21 @@ const InstitutionDashboard = () => {
   if (!institution) {
     return <div>Loading...</div>;
   }
+  const navItems = [
+    { path: '/dashboard', label: 'Back to Institutions', icon: ArrowLeftFromLine },
+    { path: `/institution/${institutionId}/institution`, label: 'Insitution Details', icon: Building2 },
+    { path: `users`, label: 'Users', icon: Users },
+    { path: `levels`, label: 'Levels', icon: LayersIcon },
+    { path: `categories`, label: 'Categories', icon: FolderTree },
+    { path: `settings`, label: 'Settings', icon: Settings },
+  ];
+
+  
 
   return (
-    <div className="min-h-screen p-6 bg-[#f5fafa] text-[#5ec5f1]">
+    <div className="flex">
+        <Navbar navItems={navItems} />
+    <div className="flex-1 ml-[18%] bg-gray-50 p-6 overflow-auto  text-[#5ec5f1]">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">{institution.institutionName}</h1>
         <p className="text-gray-400">{institution.institutionCode}</p>
@@ -71,6 +84,7 @@ const InstitutionDashboard = () => {
           onSubmit={handleSubmit}
         />
       )}
+    </div>
     </div>
   );
 };

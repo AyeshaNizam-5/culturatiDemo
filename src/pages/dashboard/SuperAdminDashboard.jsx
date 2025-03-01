@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from '../../components/Navbar';
-import { Building2, Settings } from 'lucide-react';
+import { Building2, Settings, ArrowLeftFromLine } from 'lucide-react';
 import InstitutionsList from '../institution/InstitutionsList';
 
 const navItems = [

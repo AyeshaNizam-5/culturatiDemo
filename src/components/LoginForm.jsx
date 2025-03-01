@@ -79,6 +79,9 @@ const LoginForm = () => {
                     placeholder='Password'
                     className='w-full h-14 bg-[#F9FAFA] border-none rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#0b6085] text-[#0b6085] px-4 mt-6'
                 />
+                <p className='w-full text-right text-sm text-[#0b6085] italic mt-5 cursor-pointer hover:text-blue-400 transition-colors'>
+                    Forgot your password?
+                </p>
                 <button 
                     type="submit"
                     disabled={loading}
@@ -91,6 +94,19 @@ const LoginForm = () => {
                         rounded-2xl overflow-hidden 
                         transition-all duration-300
                         ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:shadow-[0_0_20px_rgba(59,130,246,0.4)]'}
+                        before:absolute before:w-12 before:h-12 
+                        before:content-[''] before:right-1 
+                        before:top-1 before:z-10 
+                        before:bg-blue-500 before:rounded-full 
+                        before:blur-lg before:opacity-60
+                        after:absolute after:z-10 after:w-20 
+                        after:h-20 after:content-[''] 
+                        after:bg-blue-400 after:right-8 
+                        after:top-3 after:rounded-full 
+                        after:blur-lg after:opacity-60
+                        hover:before:opacity-100
+                        hover:after:opacity-100
+                        hover:text-blue-[#0b6085]
                     `}
                 >
                     {loading ? 'Logging in...' : 'Login'}

@@ -24,6 +24,7 @@ const Navbar = ({ navItems }) => {
 
   const isActiveRoute = (path) => location.pathname === path;
 
+
   return (
     <div className="fixed top-0 left-0 h-screen w-[18%] bg-white shadow-md z-50">
     <nav className="flex flex-col h-full">
