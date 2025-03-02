@@ -2,7 +2,7 @@
 
 const mockUsers = [
   { id: 1, username: "superadmin", password: "superadmin123", role: "super_admin" },
-  { id: 2, username: "admin", password: "admin123", role: "admin" },
+  { id: 2, username: "admin", password: "admin123", role: "admin", institutionId: 1 },
   { id: 3, username: "creator", password: "creator123", role: "content_creator" },
   { id: 4, username: "editor", password: "editor123", role: "editor" },
   { id: 5, username: "dataentry", password: "data123", role: "data_entry_operator" }

@@ -6,6 +6,23 @@ import ConfirmDialog from '../components/ConfirmDialog';
 import userService from '../services/userService';
 import { useParams, useOutletContext } from 'react-router-dom';
 
+// Use the same color scheme across components
+const COLORS = {
+  primary: '#5ec5f1', // Logo blue
+  secondary: '#94d0ea', // Lighter blue
+  accent: '#0b6085', // Dark blue
+  background: {
+    card: '#eff8fb', // Light blue background for cards
+    white: '#ffffff'
+  },
+  text: {
+    primary: '#0b6085', // Dark blue for primary text
+    secondary: '#6193a9', // Muted blue for secondary text
+    light: '#88b8c4' // Light blue for tertiary text
+  },
+  border: '#cde4ed' // Border color
+};
+
 const Users = () => {
   const { institutionId } = useParams();
   const { institution } = useOutletContext();
@@ -97,17 +114,17 @@ const Users = () => {
   if (error) return <div className="min-h-screen bg-[#0f172a] text-white p-8">Error: {error}</div>;
 
   return (
-    <div className="space-y-8">
-      <div className="bg-[#1e293b] rounded-xl p-6 shadow-lg border border-gray-800">
+    <div className="space-y-6">
+      <div className="mb-6">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Users</h1>
-            <p className="text-gray-400">Manage users for {institution.institutionName}</p>
+            <h1 className="text-3xl font-bold text-[#0b6085] mb-2">Users</h1>
+            <p className="text-[#6193a9]">Manage users for {institution.institutionName}</p>
           </div>
           <button 
             onClick={() => setIsFormOpen(true)}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 
-                     rounded-lg transition-colors text-white font-medium shadow-lg"
+            className="flex items-center gap-2 bg-[#5ec5f1] hover:bg-[#94d0ea] px-4 py-2 
+                     rounded-lg transition-colors text-white font-medium"
           >
             <Plus size={20} />
             Add User
@@ -115,67 +132,65 @@ const Users = () => {
         </div>
 
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6193a9]" size={20} />
           <input
             type="text"
             placeholder="Search users..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-[#0f172a] rounded-lg text-white 
-                     placeholder:text-gray-400 border border-gray-700 
-                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2.5 bg-[#eff8fb] rounded-lg text-[#0b6085] 
+                     placeholder:text-[#88b8c4] border border-[#cde4ed] 
+                     focus:outline-none focus:ring-2 focus:ring-[#5ec5f1] focus:border-transparent"
           />
         </div>
       </div>
 
-      <div className="bg-[#1e293b] rounded-xl shadow-lg overflow-hidden border border-gray-800">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-[#0f172a] border-b border-gray-700">
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Name</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Username</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Email</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Role</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Institution</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Actions</th>
+      <div className="border border-[#cde4ed] rounded-lg overflow-hidden">
+        <table className="w-full">
+          <thead>
+            <tr className="bg-[#eff8fb] border-b border-[#cde4ed]">
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#0b6085]">Name</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#0b6085]">Username</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#0b6085]">Email</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#0b6085]">Role</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#0b6085]">Institution</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#0b6085]">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[#cde4ed]">
+            {paginatedUsers.map((user) => (
+              <tr key={user.id} className="hover:bg-[#f9fafa] transition-colors">
+                <td className="px-6 py-4 whitespace-nowrap text-[#0b6085]">
+                  {user.firstName} {user.lastName}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-[#6193a9]">{user.username}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-[#6193a9]">{user.email}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className="px-2 py-1 bg-[#e0f7fa] text-[#0b6085] rounded-full text-sm font-medium">
+                    {user.role}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-[#6193a9]">{user.institution}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEdit(user)}
+                      className="p-2 hover:bg-[#eff8fb] rounded-lg transition-colors text-[#5ec5f1]"
+                    >
+                      <Pencil size={16} />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteClick(user)}
+                      className="p-2 hover:bg-[#eff8fb] rounded-lg transition-colors text-red-400"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </td>
               </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-700">
-              {paginatedUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-[#1a2234] transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap text-white">
-                    {user.firstName} {user.lastName}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.username}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm font-medium">
-                      {user.role}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.institution}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleEdit(user)}
-                        className="p-2 hover:bg-[#0f172a] rounded-lg transition-colors text-blue-400 hover:text-blue-300"
-                      >
-                        <Pencil size={16} />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteClick(user)}
-                        className="p-2 hover:bg-[#0f172a] rounded-lg transition-colors text-red-400 hover:text-red-300"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {totalPages > 1 && (
