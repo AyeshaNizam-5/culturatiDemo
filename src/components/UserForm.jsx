@@ -80,7 +80,7 @@ const UserForm = ({ user, onClose, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg w-full max-w-2xl border border-[#cde4ed]">
+      <div className="bg-white rounded-lg w-full max-w-2xl border border-[#cde4ed] max-h-[100vh] overflow-y-auto">
         <div className="flex justify-between items-center p-6 border-b border-[#cde4ed]">
           <h2 className="text-xl font-bold text-[#0b6085]">{user ? 'Edit' : 'Create'} User</h2>
           <button onClick={onClose} className="text-[#6193a9] hover:text-[#0b6085]">

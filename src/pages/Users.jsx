@@ -6,23 +6,6 @@ import ConfirmDialog from '../components/ConfirmDialog';
 import userService from '../services/userService';
 import { useParams, useOutletContext } from 'react-router-dom';
 
-// Use the same color scheme across components
-const COLORS = {
-  primary: '#5ec5f1', // Logo blue
-  secondary: '#94d0ea', // Lighter blue
-  accent: '#0b6085', // Dark blue
-  background: {
-    card: '#eff8fb', // Light blue background for cards
-    white: '#ffffff'
-  },
-  text: {
-    primary: '#0b6085', // Dark blue for primary text
-    secondary: '#6193a9', // Muted blue for secondary text
-    light: '#88b8c4' // Light blue for tertiary text
-  },
-  border: '#cde4ed' // Border color
-};
-
 const Users = () => {
   const { institutionId } = useParams();
   const { institution } = useOutletContext();
