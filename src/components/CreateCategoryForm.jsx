@@ -5,6 +5,7 @@ const CreateCategoryForm = ({ category, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
+    image: null,
   });
   const [errors, setErrors] = useState({});
 
@@ -13,6 +14,7 @@ const CreateCategoryForm = ({ category, onClose, onSubmit }) => {
       setFormData({
         name: category.name || "",
         description: category.description || "",
+        image: null,
       });
     }
   }, [category]);
@@ -79,6 +81,15 @@ const CreateCategoryForm = ({ category, onClose, onSubmit }) => {
             {errors.description && (
               <p className="text-red-500 text-sm mt-1">{errors.description}</p>
             )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-[#6193a9] mb-1">Upload Image</label>
+            <input
+              type="file"
+              className="w-full bg-[#eff8fb] p-2 rounded-lg text-[#0b6085] "
+              onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
+            />
           </div>
 
           <div className="flex justify-end gap-4 mt-6">
