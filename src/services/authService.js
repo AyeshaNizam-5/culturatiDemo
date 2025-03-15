@@ -3,9 +3,11 @@
 const mockUsers = [
   { id: 1, username: "superadmin", password: "superadmin123", role: "super_admin" },
   { id: 2, username: "admin", password: "admin123", role: "admin", institutionId: 1 },
-  { id: 3, username: "creator", password: "creator123", role: "content_creator" },
-  { id: 4, username: "editor", password: "editor123", role: "editor" },
-  { id: 5, username: "dataentry", password: "data123", role: "data_entry_operator" }
+  { id: 3, username: "creator", password: "creator123", role: "content_creator", institutionId: 1  },
+  { id: 4, username: "editor", password: "editor123", role: "editor", institutionId: 1 },
+  { id: 5, username: "dataentry", password: "data123", role: "data_entry_operator", institutionId: 1 },
+  { id: 6, username: "admin2", password: "admin123", role: "admin", institutionId: 2 },
+  { id: 7, username: "creator2", password: "creator123", role: "content_creator", institutionId: 2 },
 ];
 
 const authService = {

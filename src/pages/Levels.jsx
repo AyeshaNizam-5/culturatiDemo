@@ -6,22 +6,6 @@ import ConfirmDialog from '../components/ConfirmDialog';
 import { useParams, useOutletContext } from 'react-router-dom';
 // import levelService from '../services/levelService';
 
-// Use the same color scheme
-const COLORS = {
-  primary: '#5ec5f1',
-  secondary: '#94d0ea',
-  accent: '#0b6085',
-  background: {
-    card: '#eff8fb',
-    white: '#ffffff'
-  },
-  text: {
-    primary: '#0b6085',
-    secondary: '#6193a9',
-    light: '#88b8c4'
-  },
-  border: '#cde4ed'
-};
 
 const Levels = () => {
   const [levels, setLevels] = useState([

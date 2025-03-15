@@ -146,14 +146,14 @@ const Users = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-[#0b6085]">
                   {user.firstName} {user.lastName}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-[#6193a9]">{user.username}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-[#6193a9]">{user.email}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-[#0b6085]">{user.username}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-[#0b6085]">{user.email}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="px-2 py-1 bg-[#e0f7fa] text-[#0b6085] rounded-full text-sm font-medium">
                     {user.role}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-[#6193a9]">{user.institution}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-[#0b6085]">{institution.institutionName}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex gap-2">
                     <button

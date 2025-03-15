@@ -18,12 +18,11 @@ const App = () => {
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          {/* Public Routes */}
+         
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="settings" element={<div>Settings page coming soon</div>} />
 
-          {/* SuperAdmin Dashboard */}
           <Route
             path="/dashboard"
             element={
@@ -33,7 +32,7 @@ const App = () => {
             }
           />
 
-          {/* Admin Dashboard */}
+         
           <Route
             path="/dashboard/admin"
             element={
@@ -43,7 +42,7 @@ const App = () => {
             }
           />
 
-          {/* Content Creator Dashboard */}
+         
           <Route
             path="/dashboard/content-creator"
             element={
@@ -53,7 +52,7 @@ const App = () => {
             }
           />
 
-          {/* Institutions List - SuperAdmin Only */}
+        
           <Route
             path="/institutions"
             element={
@@ -63,7 +62,6 @@ const App = () => {
             }
           />
 
-          {/* Nested Routes for InstitutionDashboard */}
           <Route
             path="/institution/:institutionId"
             element={
@@ -79,8 +77,6 @@ const App = () => {
             <Route path="categories" element={<Categories />} />
             <Route path="settings" element={<div>Settings page coming soon</div>} />
           </Route>
-
-          {/* Catch-all Route */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>

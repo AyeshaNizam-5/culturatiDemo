@@ -10,7 +10,7 @@ const AdminDashboard = () => {
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  // Navigation items for admin - removed "Back to Institutions" button
+  
   const navItems = [
     { path: `institution`, label: 'Institution Details', icon: Building2 },
     { path: `users`, label: 'Users', icon: Users },
