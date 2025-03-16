@@ -8,7 +8,6 @@ import {
   Settings, 
   Route,
 } from 'lucide-react';
-import Navbar from '../../components/Navbar';
 // import { API_BASE_URL } from '../../config/apiConfig';
 import AppSidebar  from "@/components/app-sidebar"
 import { Separator } from "@/components/ui/separator"
@@ -17,6 +16,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import GameForm from './../../components/GameForm'
+import { Toaster } from "@/components/ui/sonner"
 
 const ContentCreatorDashboard = () => {
   const navItems = [
@@ -119,7 +120,10 @@ const ContentCreatorDashboard = () => {
        </div>
        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300">
          {selectedContent === 'game' ? (
-           <div className="text-center text-[#0b6085] text-lg">Game Content Form Coming Soon...</div>
+           <div className="text-center text-[#0b6085] text-lg">
+            <Toaster />
+            <GameForm/>
+           </div>
          ) : selectedContent === 'route' ? (
            <div className="text-center text-[#0b6085] text-lg">Route Content Form Coming Soon...</div>
          ) : (

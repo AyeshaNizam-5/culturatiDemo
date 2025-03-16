@@ -17,6 +17,7 @@ import { logoutUser } from '../store/actions/authActions';
 import { 
   LogOut
 } from 'lucide-react';
+
 type NavItem = {
   path: string;
   label: string;
@@ -45,7 +46,7 @@ const AppSidebar: React.FC<SidebarProps> = ({ navItems}) => {
 
   const isActiveRoute = (path) => location.pathname === path;
   return (
-    <Sidebar >
+    <Sidebar className="border-none ">
       <SidebarHeader>
         <div className="p-2 mb-3 flex items-center gap-6 relative">
           <img src={culturatiLogo} alt="Culturati Logo" className="w-14 h-14 rounded-full shadow-md" />
@@ -76,13 +77,13 @@ const AppSidebar: React.FC<SidebarProps> = ({ navItems}) => {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-      <button 
+          <SidebarMenuButton 
             onClick={handleLogout} 
             className="flex items-center gap-3 px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 hover:text-red-800 transition"
           >
             <LogOut size={20} />
             Logout
-          </button>
+          </SidebarMenuButton>
       </SidebarFooter>
     </Sidebar>
   );
