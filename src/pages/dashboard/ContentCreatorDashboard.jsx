@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import institutionService from '../../services/institutionService';
 import { 
@@ -18,12 +18,13 @@ import {
 } from "@/components/ui/sidebar"
 import GameForm from './../../components/GameForm'
 import { Toaster } from "@/components/ui/sonner"
+import RouteForm from './../../components/RouteForm'
 
 const ContentCreatorDashboard = () => {
   const navItems = [
     { path: '/dashboard/content-creator', label: 'Main', icon: LayersIcon },
-    { path: '/Game', label: 'Game Content', icon: Gamepad2 },
-    { path: '/Route', label: 'Route Content', icon: Route },
+    { path: '/dashboard/content-creator/Game', label: 'Game Content', icon: Gamepad2 },
+    { path: '/dashboard/content-creator/Route', label: 'Route Content', icon: Route },
     { path: '/settings', label: 'Settings', icon: Settings },
   ];
 
@@ -125,12 +126,16 @@ const ContentCreatorDashboard = () => {
             <GameForm/>
            </div>
          ) : selectedContent === 'route' ? (
-           <div className="text-center text-[#0b6085] text-lg">Route Content Form Coming Soon...</div>
+           <div className="text-center text-[#0b6085] text-lg"><Toaster />
+            <RouteForm/></div>
          ) : (
            <div className="text-center text-gray-500 text-lg">Select a content type to begin.</div>
          )}
        </div>
       </div>
+        <div className="p-4">
+          <Outlet />
+        </div>
       </SidebarInset>
   </SidebarProvider>
       

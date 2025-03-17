@@ -12,6 +12,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Categories from './pages/Categories'
 import Levels from './pages/Levels'
 import Users from './pages/Users'
+import AllGames from './pages/AllGames'
+import AllRoutes from './pages/AllRoutes'
 
 const App = () => {
   return (
@@ -48,11 +50,11 @@ const App = () => {
             element={
               <ProtectedRoute allowedRoles={['content_creator']}>
                 <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-
-        
+              </ProtectedRoute>}>
+              <Route path="/dashboard/content-creator/Game" element={<AllGames />} />
+              <Route path="/dashboard/content-creator/Route" element={<AllRoutes />} />
+          </Route>
+          
           <Route
             path="/institutions"
             element={
