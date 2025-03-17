@@ -53,6 +53,7 @@ const App = () => {
               </ProtectedRoute>}>
               <Route path="/dashboard/content-creator/Game" element={<AllGames />} />
               <Route path="/dashboard/content-creator/Route" element={<AllRoutes />} />
+              <Route path="/dashboard/content-creator/settings" element={<div>Settings page coming soon</div>} />
           </Route>
           
           <Route
