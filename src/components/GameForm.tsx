@@ -10,6 +10,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormControl
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -27,13 +28,13 @@ const FormSchema = z.object({
   choices: z.array(z.object({ text: z.string() })).min(2, "At least 2 choices are required"),
   correctAnswerIndex: z.number().min(0, "Please select a correct answer"),
   clue: z.string().optional(),
-  points: z.number().min(1, "Points must be greater than 0"),
+  points: z.number(),
   category: z.string().nonempty("Please select a category"),
   level: z.string().nonempty("Please select a level"),
   type: z.string().nonempty("Please select a type"),
   additionalInfo: z.string().optional(),
-  multimediaContent: z.array(z.object({ value: z.string().url("Please enter a valid URL") })).optional(),
-  websiteURL: z.array(z.object({ value: z.string().url("Please enter a valid URL") })).optional(),
+  multimediaContent: z.array(z.object({ value: z.string().url("Enter a valid URL") })).default([]),
+  websiteURL: z.array(z.object({ value: z.string().url("Enter a valid URL") })).default([]),
 })
 
 const GameForm = () => {
@@ -72,9 +73,10 @@ const GameForm = () => {
     name: "websiteURL",
   });
 
-  function onSubmit() {
-        toast("You have created a new game content question")
-        console.log('hello')
+  function onSubmit(values: z.infer<typeof FormSchema>) {
+    console.log("Form Submitted:", values); 
+    console.log("Form Errors:", form.formState.errors); 
+    toast("You have created a new game content question!");
     }
 
   return (
@@ -156,7 +158,7 @@ const GameForm = () => {
             <div key={choice.id} className="flex gap-4 items-center">
               <input type="radio" name="correctAnswerIndex" onChange={() => form.setValue("correctAnswerIndex", index)} />
               <Input {...form.register(`choices.${index}.text`)} placeholder={`Choice ${index + 1}`} />
-              {fields.length > 2 && <Button variant="destructive" onClick={() => remove(index)}>Remove</Button>}
+              {fields.length > 2 && <Button  onClick={() => remove(index)}>Remove</Button>}
             </div>
           ))}
           <Button onClick={() => append({ text: "" })} className="mt-2">Add Choice</Button>
@@ -164,7 +166,7 @@ const GameForm = () => {
 
         
         <FormField control={form.control} name="clue" render={({ field }) => <FormItem><FormLabel>Clue</FormLabel><Input placeholder="Write the clue here" {...field} /></FormItem>} />
-        <FormField control={form.control} name="points" render={({ field }) => <FormItem><FormLabel>Points</FormLabel><Input type="number" placeholder="Enter points" {...field} /></FormItem>} />
+        <FormField control={form.control} name="points" render={({ field }) => <FormItem><FormLabel>Points</FormLabel><Input type="number" placeholder="Enter points" min={1} {...field} /></FormItem>} />
 
        
         <div className="flex gap-4 overflow-auto">
@@ -173,35 +175,51 @@ const GameForm = () => {
           <FormField control={form.control} name="type" render={({ field }) => <FormItem><FormLabel>Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><SelectTrigger><SelectValue placeholder="Type of game" /></SelectTrigger><SelectContent><SelectItem value="type1">Type 1</SelectItem></SelectContent></Select></FormItem>} />
         </div>
 
-       
-        <div>
-        <FormLabel>Multimedia Content</FormLabel>
-        {multimediaFields.map((field, index) => (
-            <div key={field.id} className="flex gap-4 items-center">
-            <Input {...form.register(`multimediaContent.${index}.value`)} placeholder="Paste multimedia URL" />
-            {multimediaFields.length > 1 && (
-                <Button variant="destructive" onClick={() => removeMultimedia(index)}>Remove</Button>
+                
+               
+        <FormField
+            control={form.control}
+            name="multimediaContent"
+            render={() => (
+                <FormItem>
+                <FormLabel>Multimedia Content</FormLabel>
+                {multimediaFields.map((field, index) => (
+                    <div key={field.id} className="flex gap-4 items-center">
+                    <FormControl>
+                        <Input {...form.register(`multimediaContent.${index}.value`)} placeholder="Paste multimedia URL" />
+                    </FormControl>
+                    {multimediaFields.length > 1 && (
+                        <Button onClick={() => removeMultimedia(index)}>Remove</Button>
+                    )}
+                    </div>
+                ))}
+                <Button onClick={() => addMultimedia({ value: "" })} className="mt-2">+ Add Multimedia</Button>
+                </FormItem>
             )}
-            </div>
-        ))}
-        <Button onClick={() => addMultimedia({ value: "" })} className="mt-2">+ Add Multimedia</Button>
-        </div>
+        />
 
-        
-        <div>
-        <FormLabel>Website URL</FormLabel>
-        {websiteFields.map((field, index) => (
-            <div key={field.id} className="flex gap-4 items-center">
-            <Input {...form.register(`websiteURL.${index}.value`)} placeholder="Paste website URL" />
-            {websiteFields.length > 1 && (
-                <Button variant="destructive" onClick={() => removeWebsite(index)}>Remove</Button>
+           
+        <FormField
+            control={form.control}
+            name="websiteURL"
+            render={() => (
+                <FormItem>
+                <FormLabel>Website URL</FormLabel>
+                {websiteFields.map((field, index) => (
+                    <div key={field.id} className="flex gap-4 items-center">
+                    <FormControl>
+                        <Input {...form.register(`websiteURL.${index}.value`)} placeholder="Paste website URL" />
+                    </FormControl>
+                    {websiteFields.length > 1 && (
+                        <Button onClick={() => removeWebsite(index)}>Remove</Button>
+                    )}
+                    </div>
+                ))}
+                <Button onClick={() => addWebsite({ value: "" })} className="mt-2">+ Add Website</Button>
+                </FormItem>
             )}
-            </div>
-        ))}
-        <Button onClick={() => addWebsite({ value: "" })} className="mt-2">+ Add Website</Button>
-        </div>
-
-        
+        />
+         
         {/* <div>
           <FormLabel>Add Information</FormLabel>
           <CKEditor
@@ -222,3 +240,18 @@ const GameForm = () => {
 }
 export default GameForm;
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
