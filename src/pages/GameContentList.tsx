@@ -4,7 +4,8 @@ import { useState, useEffect } from "react"
 import { Download, Plus } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
-import * as XLSX from 'xlsx'
+import ExcelJS from 'exceljs'
+import { saveAs } from 'file-saver'
 // import axios from "axios"
 // import { API_BASE_URL } from "@/config/apiConfig"
 
@@ -66,57 +67,54 @@ export default function GameContentList() {
   //   }
   // }
 
-  const handleExport = () => {
+  const handleExport = async () => {
     try {
-      // Use the current filtered/sorted data from the table
-      // In the API integration version, you might want to:
-      // 1. Either export what's currently loaded
-      // 2. Or make a special API call to get all data for export
+      // Create a new workbook
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Game Content');
       
-      // Prepare data for export, excluding the id field
-      const exportData = data.map(item => {
-        const { id, ...rest } = item
-        return {
-          Question: rest.question,
-          Language: rest.language,
-          Category: rest.category,
-          Level: rest.level,
-          "Game Type": rest.gameType,
-          "Related Item": rest.relatedItem,
-          Author: rest.author,
-          "Last Editor": rest.lastEditor
-        }
-      })
-
-      // Create worksheet
-      const worksheet = XLSX.utils.json_to_sheet(exportData)
+      // Define columns with widths
+      worksheet.columns = [
+        { header: 'Question', key: 'question', width: 40 },
+        { header: 'Language', key: 'language', width: 15 },
+        { header: 'Category', key: 'category', width: 15 },
+        { header: 'Level', key: 'level', width: 10 },
+        { header: 'Game Type', key: 'gameType', width: 15 },
+        { header: 'Related Item', key: 'relatedItem', width: 20 },
+        { header: 'Author', key: 'author', width: 15 },
+        { header: 'Last Editor', key: 'lastEditor', width: 15 }
+      ];
       
-      // Set column widths for better readability
-      const columnWidths = [
-        { wch: 40 }, // Question
-        { wch: 15 }, // Language
-        { wch: 15 }, // Category
-        { wch: 10 }, // Level
-        { wch: 15 }, // Game Type
-        { wch: 20 }, // Related Item
-        { wch: 15 }, // Author
-        { wch: 15 }, // Last Editor
-      ]
-      worksheet['!cols'] = columnWidths
+      // Style the header row
+      worksheet.getRow(1).font = { bold: true };
+      worksheet.getRow(1).fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFE9ECEF' }
+      };
       
-      // Create workbook
-      const workbook = XLSX.utils.book_new()
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Game Content")
+      // Add the data rows, excluding ID
+      data.forEach(item => {
+        const { id, ...rest } = item;
+        worksheet.addRow(rest);
+      });
       
-      // Export to Excel file
-      XLSX.writeFile(workbook, "game-content.xlsx")
+      // Auto-filter
+      worksheet.autoFilter = {
+        from: { row: 1, column: 1 },
+        to: { row: 1, column: 8 }
+      };
       
-      toast.success('Exported successfully to Excel')
+      // Generate buffer and save to file
+      const buffer = await workbook.xlsx.writeBuffer();
+      saveAs(new Blob([buffer]), 'game-content.xlsx');
+      
+      toast.success('Exported successfully to Excel');
     } catch (error) {
-      console.error('Export error:', error)
-      toast.error('Export failed. Please try again.')
+      console.error('Export error:', error);
+      toast.error('Export failed. Please try again.');
     }
-  }
+  };
 
   return (
     <div className="container mx-auto p-4 py-10">
