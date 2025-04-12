@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Outlet, useLocation  } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import institutionService from '../../services/institutionService';
+// For API integration - uncomment these imports when connecting to the backend
+// import axios from 'axios';
+// import { API_BASE_URL } from '../../config/apiConfig';
 import { 
   Gamepad2,
   LayersIcon, 
   Settings, 
   Route,
 } from 'lucide-react';
-// import { API_BASE_URL } from '../../config/apiConfig';
 import AppSidebar  from "@/components/app-sidebar"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -19,6 +21,8 @@ import {
 import GameForm from './../../components/GameForm'
 import { Toaster } from "@/components/ui/sonner"
 import RouteForm from './../../components/RouteForm'
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
 
 const ContentCreatorDashboard = () => {
   const navItems = [
@@ -30,15 +34,29 @@ const ContentCreatorDashboard = () => {
 
   const { institutionId } = useParams(); 
   const [institution, setInstitution] = useState(null);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
   const [selectedContent, setSelectedContent] = useState('');
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();  
   const isMainPage = location.pathname === "/dashboard/content-creator"; 
 
+  // Enhanced API integration for fetching institution (uncomment when connecting to backend)
   // useEffect(() => {
   //   const fetchInstitution = async () => {
   //     try {
-  //       const response = await axios.get(`${API_BASE_URL}/institutions`);
+  //       setLoading(true);
+  //       setError(null);
+  //       
+  //       // If we have a specific institutionId from URL params, use that
+  //       // Otherwise use the current user's institutionId
+  //       const targetInstitutionId = institutionId || user?.institutionId;
+  //       
+  //       if (!targetInstitutionId) {
+  //         throw new Error('No institution ID available');
+  //       }
+  //       
+  //       const response = await axios.get(`${API_BASE_URL}/institutions/${targetInstitutionId}`);
   //       setInstitution(response.data);
   //     } catch (err) {
   //       console.error('Error fetching institution:', err);
@@ -47,10 +65,11 @@ const ContentCreatorDashboard = () => {
   //       setLoading(false);
   //     }
   //   };
-
+  //
   //   fetchInstitution();
-  // }, [institutionId]);
+  // }, [institutionId, user]);
 
+  // Current mock implementation using institutionService
   useEffect(() => {
     const fetchInstitution = async () => {
       try {
@@ -65,7 +84,7 @@ const ContentCreatorDashboard = () => {
     };
     
     fetchInstitution();
-  }, [institutionId]);
+  }, [institutionId, user.institutionId]);
   
   return (
     
@@ -77,65 +96,55 @@ const ContentCreatorDashboard = () => {
             <Separator orientation="vertical" className="mr-2 h-4" />
               {institution ? (
                 <>
-                  <h1 className="text-2xl font-bold text-[#0b6085]">
+                  <h1 className="text-2xl font-bold text-primary truncate">
                     {institution.institutionName}
                   </h1>
                 </>
               ) : (
-                <p className="text-gray-500">Loading institution details...</p>
+                <p className="text-muted-foreground">Loading institution details...</p>
               )}
         
         </header>
         {isMainPage && (
-          <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+          <div className="flex flex-1 flex-col gap-4 p-3 sm:p-4 pt-0">
           
-          <div className="mb-6 bg-white p-2 rounded-lg shadow-md border border-gray-300">
-            <h2 className="text-lg font-semibold text-[#0b6085] mb-4">
+          <div className="mb-6 bg-card p-3 sm:p-4 rounded-lg shadow-sm border">
+            <h2 className="text-lg font-semibold text-primary mb-4">
               Select Content Type:
             </h2>
-            <div className="flex gap-6">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="contentType"
-                  value="game"
-                  checked={selectedContent === 'game'}
-                  onChange={() => setSelectedContent('game')}
-                  className="w-5 h-5 accent-[#0b6085]"
-                />
-                <span className="text-gray-700">Game Content</span>
-              </label>
-
-              {/* Route Content Radio */}
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="contentType"
-                  value="route"
-                  checked={selectedContent === 'route'}
-                  onChange={() => setSelectedContent('route')}
-                  className="w-5 h-5 accent-[#0b6085]"
-                />
-                <span className="text-gray-700">Route Content</span>
-              </label>
-            </div>
+            <RadioGroup
+              value={selectedContent}
+              onValueChange={setSelectedContent}
+              className="flex flex-col sm:flex-row gap-4 sm:gap-6"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="game" id="game" />
+                <Label htmlFor="game" className="text-foreground">Game Content</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="route" id="route" />
+                <Label htmlFor="route" className="text-foreground">Route Content</Label>
+              </div>
+            </RadioGroup>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300">
+
+          <div className="bg-card p-3 sm:p-6 rounded-lg shadow-sm border">
             {selectedContent === 'game' ? (
-              <div className="text-center text-[#0b6085] text-lg">
+              <div className="text-primary">
                 <Toaster />
                 <GameForm/>
               </div>
             ) : selectedContent === 'route' ? (
-              <div className="text-center text-[#0b6085] text-lg">
+              <div className="text-primary">
                 <Toaster />
-                <RouteForm/></div>
+                <RouteForm/>
+              </div>
             ) : (
-              <div className="text-center text-gray-500 text-lg">Select a content type to begin.</div>
+              <div className="text-center text-muted-foreground text-lg">Select a content type to begin.</div>
             )}
           </div>
           </div>)}
-          <div className="p-4">
+          <div className="p-3 sm:p-4">
             <Outlet />
           </div>
     </SidebarInset>

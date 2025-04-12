@@ -1,9 +1,7 @@
-
+import RouteContentList from "./RouteContentList";
 
 const AllRoutes = () => {
-  return (
-    <div>AllRoutes</div>
-  )
+  return <RouteContentList />;
 }
 
-export default AllRoutes
+export default AllRoutes;

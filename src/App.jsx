@@ -14,6 +14,7 @@ import Levels from './pages/Levels'
 import Users from './pages/Users'
 import AllGames from './pages/AllGames'
 import AllRoutes from './pages/AllRoutes'
+import './App.css';
 
 
 const App = () => {

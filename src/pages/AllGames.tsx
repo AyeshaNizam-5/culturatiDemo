@@ -1,9 +1,7 @@
-
+import GameContentList from "./GameContentList";
 
 const AllGames = () => {
-  return (
-    <div>AllGames</div>
-  )
+  return <GameContentList />;
 }
 
-export default AllGames
+export default AllGames;
