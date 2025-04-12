@@ -1,6 +1,6 @@
 "use client"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, useFieldArray } from "react-hook-form"
 import { z } from "zod"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
@@ -10,9 +10,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormControl
 } from "@/components/ui/form"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 // import { useState } from "react";
 // import { CKEditor } from '@ckeditor/ckeditor5-react';
 // import { ClassicEditor, Essentials, Paragraph, Bold, Italic } from 'ckeditor5';
@@ -25,6 +27,9 @@ const FormSchema = z.object({
   category: z.string().nonempty("Please select a category"),
   level: z.string().nonempty("Please select a level"),
   type: z.string().nonempty("Please select a type"),
+  additionalInfo: z.string().optional(),
+  multimediaContent: z.array(z.object({ value: z.string().url() })).optional(),
+  websiteURL: z.array(z.object({ value: z.string().url() })).optional(),
 })
 
 const RouteForm = () => {
@@ -38,8 +43,21 @@ const RouteForm = () => {
       category: "",
       level: "",
       type: "",
+      additionalInfo: "",
+      multimediaContent: [{ value: "" }], 
+      websiteURL: [{ value: "" }],
     },
   })
+
+  const { fields: multimediaFields, append: addMultimedia, remove: removeMultimedia } = useFieldArray({
+      control: form.control,
+      name: "multimediaContent",
+  });
+  
+  const { fields: websiteFields, append: addWebsite, remove: removeWebsite } = useFieldArray({
+      control: form.control,
+      name: "websiteURL",
+  });
   
   function onSubmit(values: z.infer<typeof FormSchema>) {
     console.log("Form Submitted:", values); 
@@ -107,7 +125,48 @@ const RouteForm = () => {
           <FormField control={form.control} name="type" render={({ field }) => <FormItem><FormLabel>Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><SelectTrigger><SelectValue placeholder="Type of game" /></SelectTrigger><SelectContent><SelectItem value="type1">Type 1</SelectItem></SelectContent></Select><FormMessage /></FormItem>} />
         </div>
 
-                
+        <FormField
+            control={form.control}
+            name="multimediaContent"
+            render={() => (
+                <FormItem>
+                <FormLabel>Multimedia Content</FormLabel>
+                {multimediaFields.map((field, index) => (
+                    <div key={field.id} className="flex gap-4 items-center">
+                    <FormControl>
+                        <Input {...form.register(`multimediaContent.${index}.value`)} placeholder="Paste multimedia URL" />
+                    </FormControl>
+                    {multimediaFields.length > 1 && (
+                        <Button onClick={() => removeMultimedia(index)}>Remove</Button>
+                    )}
+                    </div>
+                ))}
+                <Button onClick={() => addMultimedia({ value: "" })} className="mt-2">+ Add Multimedia</Button>
+                </FormItem>
+            )}
+        />
+
+           
+        <FormField
+            control={form.control}
+            name="websiteURL"
+            render={() => (
+                <FormItem>
+                <FormLabel>Website URL</FormLabel>
+                {websiteFields.map((field, index) => (
+                    <div key={field.id} className="flex gap-4 items-center">
+                    <FormControl>
+                        <Input {...form.register(`websiteURL.${index}.value`)} placeholder="Paste website URL" />
+                    </FormControl>
+                    {websiteFields.length > 1 && (
+                        <Button onClick={() => removeWebsite(index)}>Remove</Button>
+                    )}
+                    </div>
+                ))}
+                <Button onClick={() => addWebsite({ value: "" })} className="mt-2">+ Add Website</Button>
+                </FormItem>
+            )}
+        />
                
        
          

@@ -33,8 +33,8 @@ const FormSchema = z.object({
   level: z.string().nonempty("Please select a level"),
   type: z.string().nonempty("Please select a type"),
   additionalInfo: z.string().optional(),
-  multimediaContent: z.array(z.object({ value: z.string().url("Enter a valid URL") })).default([]),
-  websiteURL: z.array(z.object({ value: z.string().url("Enter a valid URL") })).default([]),
+  multimediaContent: z.array(z.object({ text: z.string().url().optional() })),
+  websiteURL: z.array(z.object({ text: z.string().url().optional() })),
 })
 
 const GameForm = () => {
@@ -54,8 +54,8 @@ const GameForm = () => {
       level: "",
       type: "",
       additionalInfo: "",
-      multimediaContent: [{ value: "" }], 
-      websiteURL: [{ value: "" }],
+      multimediaContent: [{ text: "" }], 
+      websiteURL: [{ text: "" }],
     },
   })
   const { fields, append, remove } = useFieldArray({
@@ -186,14 +186,14 @@ const GameForm = () => {
                 {multimediaFields.map((field, index) => (
                     <div key={field.id} className="flex gap-4 items-center">
                     <FormControl>
-                        <Input {...form.register(`multimediaContent.${index}.value`)} placeholder="Paste multimedia URL" />
+                        <Input {...form.register(`multimediaContent.${index}.text`)} placeholder="Paste multimedia URL" />
                     </FormControl>
                     {multimediaFields.length > 1 && (
                         <Button onClick={() => removeMultimedia(index)}>Remove</Button>
                     )}
                     </div>
                 ))}
-                <Button onClick={() => addMultimedia({ value: "" })} className="mt-2">+ Add Multimedia</Button>
+                <Button onClick={() => addMultimedia({ text: "" })} className="mt-2">+ Add Multimedia</Button>
                 </FormItem>
             )}
         />
@@ -208,14 +208,14 @@ const GameForm = () => {
                 {websiteFields.map((field, index) => (
                     <div key={field.id} className="flex gap-4 items-center">
                     <FormControl>
-                        <Input {...form.register(`websiteURL.${index}.value`)} placeholder="Paste website URL" />
+                        <Input {...form.register(`websiteURL.${index}.text`)} placeholder="Paste website URL" />
                     </FormControl>
                     {websiteFields.length > 1 && (
                         <Button onClick={() => removeWebsite(index)}>Remove</Button>
                     )}
                     </div>
                 ))}
-                <Button onClick={() => addWebsite({ value: "" })} className="mt-2">+ Add Website</Button>
+                <Button onClick={() => addWebsite({ text: "" })} className="mt-2">+ Add Website</Button>
                 </FormItem>
             )}
         />

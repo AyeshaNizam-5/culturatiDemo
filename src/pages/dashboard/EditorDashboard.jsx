@@ -20,12 +20,12 @@ import GameForm from './../../components/GameForm'
 import { Toaster } from "@/components/ui/sonner"
 import RouteForm from './../../components/RouteForm'
 
-const ContentCreatorDashboard = () => {
+const EditorDashboard = () => {
   const navItems = [
-    { path: '/dashboard/content-creator', label: 'Main', icon: LayersIcon },
-    { path: '/dashboard/content-creator/Game', label: 'Game Content', icon: Gamepad2 },
-    { path: '/dashboard/content-creator/Route', label: 'Route Content', icon: Route },
-    { path: '/dashboard/content-creator/settings', label: 'Settings', icon: Settings },
+    { path: '/dashboard/editor', label: 'Main', icon: LayersIcon },
+    { path: '/dashboard/editor/Game', label: 'Game Content', icon: Gamepad2 },
+    { path: '/dashboard/editor/Route', label: 'Route Content', icon: Route },
+    { path: '/dashboard/editor/settings', label: 'Settings', icon: Settings },
   ];
 
   const { institutionId } = useParams(); 
@@ -33,7 +33,7 @@ const ContentCreatorDashboard = () => {
   const [selectedContent, setSelectedContent] = useState('');
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();  
-  const isMainPage = location.pathname === "/dashboard/content-creator"; 
+  const isMainPage = location.pathname === "/dashboard/editor"; 
 
   // useEffect(() => {
   //   const fetchInstitution = async () => {
@@ -144,4 +144,4 @@ const ContentCreatorDashboard = () => {
   )
 }
 
-export default ContentCreatorDashboard
+export default EditorDashboard

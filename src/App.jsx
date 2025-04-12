@@ -15,6 +15,7 @@ import Users from './pages/Users'
 import AllGames from './pages/AllGames'
 import AllRoutes from './pages/AllRoutes'
 
+
 const App = () => {
   return (
     <Provider store={store}>
@@ -54,6 +55,17 @@ const App = () => {
               <Route path="/dashboard/content-creator/Game" element={<AllGames />} />
               <Route path="/dashboard/content-creator/Route" element={<AllRoutes />} />
               <Route path="/dashboard/content-creator/settings" element={<div>Settings page coming soon</div>} />
+          </Route>
+
+          <Route
+            path="/dashboard/editor"
+            element={
+              <ProtectedRoute allowedRoles={['editor']}>
+                <Dashboard />
+              </ProtectedRoute>}>
+              <Route path="/dashboard/editor/Game" element={<AllGames />} />
+              <Route path="/dashboard/editor/Route" element={<AllRoutes />} />
+              <Route path="/dashboard/editor/settings" element={<div>Settings page coming soon</div>} />
           </Route>
           
           <Route

@@ -6,10 +6,11 @@ import { Navigate, useNavigate } from 'react-router-dom';
 const SuperAdminDashboard = lazy(() => import('./SuperAdminDashboard'));
 const AdminDashboard = lazy(() => import('./AdminDashboard'));
 const ContentCreatorDashboard = lazy(() => import('./ContentCreatorDashboard'));
+const EditorDashboard = lazy(() => import('./EditorDashboard'));
 
 const Dashboard = () => {
   const { role, isAuthenticated } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
@@ -37,6 +38,12 @@ const Dashboard = () => {
       return (
         <Suspense fallback={<div>Loading Dashboard...</div>}>
           <ContentCreatorDashboard />
+        </Suspense>
+      );
+      case 'editor':
+      return (
+        <Suspense fallback={<div>Loading Dashboard...</div>}>
+          <EditorDashboard />
         </Suspense>
       );
     default:

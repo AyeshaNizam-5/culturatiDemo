@@ -19,8 +19,6 @@ const authService = {
 
       if (user) {
         const token = "mock-jwt-token";
-        
-        // Normalize role to lowercase before storing
         const normalizedUser = {
           ...user,
           role: user.role.toLowerCase()
@@ -46,8 +44,6 @@ const authService = {
   isAuthenticated: () => {
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
-
-    // Normalize role before returning
     if (user && user.role) {
       user.role = user.role.toLowerCase();
     }
