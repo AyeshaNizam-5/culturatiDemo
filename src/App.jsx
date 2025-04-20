@@ -15,6 +15,8 @@ import Users from './pages/Users'
 import './App.css';
 import GameContentList from "./pages/GameContentList";
 import RouteContentList from "./pages/RouteContentList";
+import AboutInstitution from './pages/AboutInstitution'
+import ItemsPage from './pages/ItemsPage'
 
 
 const App = () => {
@@ -67,6 +69,17 @@ const App = () => {
               <Route path="/dashboard/editor/Game" element={<GameContentList />} />
               <Route path="/dashboard/editor/Route" element={<RouteContentList />} />
               <Route path="/dashboard/editor/settings" element={<div>Settings page coming soon</div>} />
+          </Route>
+
+          <Route
+            path="/dashboard/data-entry-operator"
+            element={
+              <ProtectedRoute allowedRoles={['data_entry_operator']}>
+                <Dashboard />
+              </ProtectedRoute>}>
+              <Route path="/dashboard/data-entry-operator/AboutInstitution" element={<AboutInstitution />} />
+              <Route path="/dashboard/data-entry-operator/Items" element={<ItemsPage />} />
+              <Route path="/dashboard/data-entry-operator/settings" element={<div>Settings page coming soon</div>} />
           </Route>
           
           <Route

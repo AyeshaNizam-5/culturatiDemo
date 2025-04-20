@@ -39,6 +39,9 @@ const LoginForm = () => {
                 case 'editor':
                     navigate('/dashboard/editor');
                     break;
+                    case 'data_entry_operator':
+                        navigate('/dashboard/data-entry-operator');
+                        break;
                 default:
                     navigate('/unauthorized');
                     break;

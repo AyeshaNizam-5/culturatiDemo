@@ -7,6 +7,7 @@ const SuperAdminDashboard = lazy(() => import('./SuperAdminDashboard'));
 const AdminDashboard = lazy(() => import('./AdminDashboard'));
 const ContentCreatorDashboard = lazy(() => import('./ContentCreatorDashboard'));
 const EditorDashboard = lazy(() => import('./EditorDashboard'));
+const DataEntryDashboard = lazy(() => import('./DataEntryDashboard'));
 
 const Dashboard = () => {
   const { role, isAuthenticated } = useSelector((state) => state.auth);
@@ -44,6 +45,12 @@ const Dashboard = () => {
       return (
         <Suspense fallback={<div>Loading Dashboard...</div>}>
           <EditorDashboard />
+        </Suspense>
+      );
+      case 'data_entry_operator':
+      return (
+        <Suspense fallback={<div>Loading Dashboard...</div>}>
+          <DataEntryDashboard />
         </Suspense>
       );
     default:
