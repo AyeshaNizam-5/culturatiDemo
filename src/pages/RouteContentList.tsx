@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Download, Plus } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { Download, Plus, Upload } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import ExcelJS from 'exceljs'
@@ -13,12 +13,27 @@ import { Button } from "@/components/ui/button"
 import { columns } from "@/components/route-content/columns"
 import { DataTable } from "@/components/route-content/data-table"
 import { sampleRouteContent } from "@/lib/sample-data"
+import { ImportAction } from "@/components/ui/import-dialog"
+import { RouteImportDialog } from "@/components/ui/route-import-dialog"
+import { ErrorDialog } from "@/components/ui/error-dialog"
 
 export default function RouteContentList() {
   const [data, setData] = useState(sampleRouteContent)
   // const [isLoading, setIsLoading] = useState(false)
   // const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  
+  // Import dialog state
+  const [importDialogOpen, setImportDialogOpen] = useState(false)
+  const [importData, setImportData] = useState<any[]>([])
+  const [conflictCount, setConflictCount] = useState(0)
+  const [duplicateCount, setDuplicateCount] = useState(0)
+  
+  // Error dialog state
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false)
+  const [errorType, setErrorType] = useState('')
+  const [errorDetails, setErrorDetails] = useState('')
 
   // useEffect(() => {
   //   fetchRouteContent()
@@ -116,6 +131,377 @@ export default function RouteContentList() {
     }
   };
 
+  const handleImportClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  // Check if an item already exists (simplistic approach)
+  const findConflicts = (importedItem: any) => {
+    // Track if this is an exact duplicate (all fields match)
+    const duplicates = data.filter(item => {
+      const isExactDuplicate = 
+        item.contentName.toLowerCase().trim() === importedItem.contentName.toLowerCase().trim() &&
+        item.language === importedItem.language &&
+        item.category === importedItem.category &&
+        item.level === importedItem.level &&
+        item.type === importedItem.type &&
+        item.relatedItem === importedItem.relatedItem;
+      
+      return isExactDuplicate;
+    });
+    
+    // If we found exact duplicates, mark it as a duplicate
+    if (duplicates.length > 0) {
+      return { isDuplicate: true, id: duplicates[0].id };
+    }
+    
+    // Otherwise, check if there's a content conflict (same content name but different metadata)
+    const contentConflicts = data.some(item => 
+      item.contentName.toLowerCase().trim() === importedItem.contentName.toLowerCase().trim() &&
+      (
+        item.language !== importedItem.language ||
+        item.category !== importedItem.category ||
+        item.level !== importedItem.level ||
+        item.type !== importedItem.type ||
+        item.relatedItem !== importedItem.relatedItem
+      )
+    );
+    
+    return contentConflicts ? { isConflict: true } : false;
+  };
+
+  const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      console.error('No file selected');
+      setErrorType('No File Selected');
+      setErrorDetails('Please select a valid Excel file (.xlsx or .xls) to import.');
+      setErrorDialogOpen(true);
+      return;
+    }
+
+    // Validate file extension
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    if (fileExtension !== 'xlsx' && fileExtension !== 'xls') {
+      console.error('Invalid file type:', fileExtension);
+      setErrorType('Invalid File Type');
+      setErrorDetails('Only Excel files (.xlsx or .xls) are supported for import. Please select a valid file.');
+      setErrorDialogOpen(true);
+      return;
+    }
+    
+    console.log(`Processing Excel file: ${file.name} (${(file.size / 1024).toFixed(2)} KB)`);
+
+    try {
+      const reader = new FileReader();
+      
+      reader.onload = async (e) => {
+        try {
+          const buffer = e.target?.result;
+          if (!buffer) {
+            console.error('File buffer is empty');
+            setErrorType('Empty File');
+            setErrorDetails('The file appears to be empty or could not be read.');
+            setErrorDialogOpen(true);
+            return;
+          }
+          
+          console.log('File loaded successfully, attempting to parse as Excel...');
+          
+          // Load workbook from file
+          const workbook = new ExcelJS.Workbook();
+          await workbook.xlsx.load(buffer as ArrayBuffer);
+          
+          // Get first worksheet
+          const worksheet = workbook.getWorksheet(1);
+          if (!worksheet) {
+            console.error('No worksheet found in the workbook');
+            setErrorType('Invalid Worksheet');
+            setErrorDetails('No worksheet found in the Excel file. Please make sure the file contains at least one sheet.');
+            setErrorDialogOpen(true);
+            return;
+          }
+          
+          console.log('Worksheet found, checking headers...');
+          
+          // Check if worksheet has rows
+          if (worksheet.rowCount <= 1) {
+            console.error('Excel file has less than 2 rows (header + data)');
+            setErrorType('Empty Data');
+            setErrorDetails('The Excel file contains no data rows. Please make sure the file has headers and at least one data row.');
+            setErrorDialogOpen(true);
+            return;
+          }
+
+          // Extract headers to ensure correct mapping
+          const headers: Record<number, string> = {};
+          const headerRow = worksheet.getRow(1);
+          
+          // Check if header row has any cells
+          let headerCellCount = 0;
+          headerRow.eachCell((cell, colNumber) => {
+            const headerValue = cell.value?.toString().toLowerCase() || '';
+            headers[colNumber] = headerValue;
+            headerCellCount++;
+            console.log(`Header found: ${colNumber} = "${headerValue}"`);
+          });
+          
+          if (headerCellCount === 0) {
+            console.error('No headers found in the first row');
+            setErrorType('Missing Headers');
+            setErrorDetails('The Excel file has no header row or headers are empty. The first row must contain column headers.');
+            setErrorDialogOpen(true);
+            return;
+          }
+
+          // Define required headers
+          const requiredHeaders = ['content name', 'language', 'category', 'level', 'game type', 'related item'];
+          
+          // Validate headers
+          const missingHeaders = requiredHeaders.filter(
+            header => !Object.values(headers).some(h => h.toLowerCase() === header.toLowerCase())
+          );
+          
+          if (missingHeaders.length > 0) {
+            console.error('Missing headers:', missingHeaders);
+            console.log('Available headers:', Object.values(headers));
+            setErrorType('Invalid Headers');
+            setErrorDetails(`Missing required headers: ${missingHeaders.join(', ')}. Please ensure your file has all required columns.`);
+            setErrorDialogOpen(true);
+            return;
+          }
+
+          // Process rows
+          const importedData: any[] = [];
+          const rowErrors: string[] = [];
+          
+          console.log(`Starting to process ${worksheet.rowCount - 1} data rows...`);
+          
+          worksheet.eachRow((row, rowNumber) => {
+            // Skip header row
+            if (rowNumber === 1) return;
+            
+            const rowData: Record<string, any> = {};
+            let cellsProcessed = 0;
+            
+            // Map column headers to field names
+            row.eachCell((cell, colNumber) => {
+              const header = headers[colNumber];
+              if (!header) return;
+              
+              const value = cell.value?.toString() || '';
+              cellsProcessed++;
+              
+              switch (header.toLowerCase()) {
+                case 'content name':
+                  rowData.contentName = value.trim();
+                  break;
+                case 'language':
+                  rowData.language = value.trim();
+                  break;
+                case 'category':
+                  rowData.category = value.trim();
+                  break;
+                case 'level':
+                  rowData.level = value.trim();
+                  break;
+                case 'game type':
+                  rowData.type = value.trim();
+                  break;
+                case 'related item':
+                  rowData.relatedItem = value.trim();
+                  break;
+                case 'author':
+                  rowData.author = value.trim();
+                  break;
+                case 'last editor':
+                  rowData.lastEditor = value.trim();
+                  break;
+              }
+            });
+            
+            if (cellsProcessed === 0) {
+              // Skip empty rows silently
+              console.log(`Row ${rowNumber}: Empty row, skipping`);
+              return;
+            }
+            
+            // Check for required fields
+            if (!rowData.contentName) {
+              rowErrors.push(`Row ${rowNumber}: Missing content name`);
+              console.log(`Row ${rowNumber}: Missing required content name field`);
+              return;
+            }
+            
+            // Generate a unique ID for each new item
+            rowData.id = `import-${Date.now()}-${rowNumber}`;
+            
+            // Set default values for missing optional fields
+            rowData.author = rowData.author || 'Imported';
+            rowData.lastEditor = rowData.lastEditor || 'Imported';
+            
+            importedData.push(rowData);
+            console.log(`Row ${rowNumber}: Successfully processed content "${rowData.contentName}"`);
+          });
+          
+          console.log(`Completed processing ${importedData.length} valid rows with ${rowErrors.length} errors`);
+          
+          if (rowErrors.length > 0) {
+            console.error('Import row errors:', rowErrors);
+            setErrorType('Data Validation Errors');
+            setErrorDetails(`Found ${rowErrors.length} rows with errors. First error: ${rowErrors[0]}`);
+            setErrorDialogOpen(true);
+            return;
+          }
+          
+          if (importedData.length === 0) {
+            console.error('No valid data rows were processed');
+            setErrorType('No Valid Data');
+            setErrorDetails('No valid data found in the Excel file. Please check that your file contains valid data rows.');
+            setErrorDialogOpen(true);
+            return;
+          }
+          
+          // Check for duplicates and conflicts
+          let exactDuplicates = 0;
+          let contentConflicts = 0;
+          
+          console.log('Starting duplicate and conflict detection...');
+          
+          importedData.forEach(item => {
+            const result = findConflicts(item);
+            if (result) {
+              if (result.isDuplicate) {
+                exactDuplicates++;
+                item._isDuplicate = true;
+                item._existingId = result.id;
+                console.log(`Item '${item.contentName}' is an exact duplicate`);
+              } else if (result.isConflict) {
+                contentConflicts++;
+                item._hasConflict = true;
+                console.log(`Item '${item.contentName}' has content conflicts with different metadata`);
+              }
+            }
+          });
+          
+          console.log(`Found ${exactDuplicates} exact duplicates and ${contentConflicts} content conflicts`);
+          console.log('Import processing completed successfully');
+          
+          // Open the import dialog with the parsed data
+          setImportData(importedData);
+          setDuplicateCount(exactDuplicates);
+          setConflictCount(exactDuplicates + contentConflicts);
+          setImportDialogOpen(true);
+        } catch (innerError: unknown) {
+          console.error('Error processing Excel file:', innerError);
+          setErrorType('Processing Error');
+          setErrorDetails(innerError instanceof Error ? innerError.message : 'Unknown error occurred while processing the Excel file');
+          setErrorDialogOpen(true);
+        }
+      };
+      
+      reader.onerror = (error: ProgressEvent<FileReader>) => {
+        console.error('FileReader error:', error);
+        setErrorType('File Reading Error');
+        setErrorDetails('Failed to read the file. The file may be corrupted or in an unsupported format.');
+        setErrorDialogOpen(true);
+      };
+      
+      reader.readAsArrayBuffer(file);
+      
+      // Reset file input
+      if (event.target) {
+        event.target.value = '';
+      }
+    } catch (error: unknown) {
+      console.error('Import error:', error);
+      setErrorType('Import Error');
+      setErrorDetails(error instanceof Error ? error.message : 'Failed to import Excel file. Check the file format.');
+      setErrorDialogOpen(true);
+    }
+  };
+
+  const handleImportAction = (action: ImportAction) => {
+    if (importData.length === 0) return;
+
+    try {
+      console.log(`Applying import action: ${action} on ${importData.length} items`);
+      
+      // Get only selected items for import (non-selected items will be filtered out)
+      const selectedItems = importData.filter(item => item._selected !== false);
+      
+      if (selectedItems.length === 0) {
+        toast.warning("No items selected for import");
+        return;
+      }
+      
+      console.log(`Processing ${selectedItems.length} selected items out of ${importData.length} total items`);
+      
+      switch (action) {
+        case 'append':
+          // Add all selected imported data
+          console.log(`Appending ${selectedItems.length} selected items to existing data`);
+          setData([...data, ...selectedItems]);
+          toast.success(`Added ${selectedItems.length} new route content items`);
+          break;
+          
+        case 'skip-conflicts':
+          // Add only non-duplicate selected items (skip exact duplicates)
+          const nonDuplicateItems = selectedItems.filter(item => !item._isDuplicate);
+          console.log(`Adding ${nonDuplicateItems.length} non-duplicate selected items, skipping duplicates`);
+          setData([...data, ...nonDuplicateItems]);
+          toast.success(`Added ${nonDuplicateItems.length} items, skipped duplicates`);
+          break;
+          
+        case 'replace-conflicts':
+          // First identify items with content conflicts
+          const itemsWithContentConflicts = selectedItems.filter(item => item._hasConflict);
+          
+          // Get the content names with conflicts
+          const conflictingNames = itemsWithContentConflicts.map(item => 
+            item.contentName.toLowerCase().trim()
+          );
+          
+          console.log(`Found ${conflictingNames.length} items with content conflicts to replace`);
+          
+          // Remove items with content conflicts from existing data
+          const filteredData = data.filter(item => 
+            !conflictingNames.includes(item.contentName.toLowerCase().trim())
+          );
+          
+          console.log(`Removed ${data.length - filteredData.length} conflicting items from existing data`);
+          
+          // For duplicates, don't add them again
+          const nonDuplicateImports = selectedItems.filter(item => !item._isDuplicate);
+          
+          console.log(`Adding ${nonDuplicateImports.length} non-duplicate selected items after handling conflicts`);
+          
+          setData([...filteredData, ...nonDuplicateImports]);
+          toast.success(`Added ${nonDuplicateImports.length} items, replaced ${conflictingNames.length} conflicting items`);
+          break;
+      }
+      
+      console.log('Import action completed successfully');
+      
+      // API Integration (uncomment when connecting to backend)
+      // const apiData = importData.map(({ id, _isDuplicate, _hasConflict, _existingId, _selected, ...rest }) => rest); // Remove client-side data
+      // await axios.post(`${API_BASE_URL}/route-content/bulk`, apiData);
+      
+      // Close the dialog and clear import data
+      setImportDialogOpen(false);
+      setImportData([]);
+      setConflictCount(0);
+      setDuplicateCount(0);
+    } catch (error: unknown) {
+      console.error('Error applying import action:', error);
+      setErrorType('Import Processing Error');
+      setErrorDetails(error instanceof Error ? error.message : 'Failed to complete the import action. Please try again.');
+      setErrorDialogOpen(true);
+    }
+  };
+
   return (
     <div className="container mx-auto p-4 py-10">
       <div className="mb-8">
@@ -124,10 +510,24 @@ export default function RouteContentList() {
           <div className="flex items-center gap-2">
             <Button 
               className="flex items-center gap-2" 
+              onClick={handleImportClick}
+              variant="outline"
+            >
+              <Download size={16} /> Import Excel
+            </Button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImport}
+              accept=".xlsx, .xls"
+              className="hidden"
+            />
+            <Button 
+              className="flex items-center gap-2" 
               onClick={handleExport}
               variant="outline"
             >
-              <Download size={16} /> Export to Excel
+              <Upload size={16} /> Export to Excel
             </Button>
             <Button 
               className="flex items-center gap-2" 
@@ -174,6 +574,37 @@ export default function RouteContentList() {
           </div>
         )}
       </div>
+
+      {/* Import Dialog */}
+      <RouteImportDialog
+        open={importDialogOpen}
+        onOpenChange={setImportDialogOpen}
+        title="Import Route Content"
+        description="Review and confirm the route content items to be imported from Excel."
+        importData={importData}
+        existingDataCount={data.length}
+        conflictCount={conflictCount}
+        duplicateCount={duplicateCount}
+        onImport={handleImportAction}
+        columns={[
+          { key: 'contentName', header: 'Content Name', width: 300 },
+          { key: 'language', header: 'Language' },
+          { key: 'category', header: 'Category' },
+          { key: 'level', header: 'Level' },
+          { key: 'type', header: 'Game Type' },
+          { key: 'relatedItem', header: 'Related Item' }
+        ]}
+      />
+
+      {/* Error Dialog */}
+      <ErrorDialog
+        open={errorDialogOpen}
+        onOpenChange={setErrorDialogOpen}
+        title="Excel Import Failed"
+        description="There was a problem with the Excel file you uploaded."
+        errorType={errorType}
+        errorDetails={errorDetails}
+      />
     </div>
   )
 } 
