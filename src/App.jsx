@@ -12,9 +12,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Categories from './pages/Categories'
 import Levels from './pages/Levels'
 import Users from './pages/Users'
-import AllGames from './pages/AllGames'
-import AllRoutes from './pages/AllRoutes'
 import './App.css';
+import GameContentList from "./pages/GameContentList";
+import RouteContentList from "./pages/RouteContentList";
 
 
 const App = () => {
@@ -53,8 +53,8 @@ const App = () => {
               <ProtectedRoute allowedRoles={['content_creator']}>
                 <Dashboard />
               </ProtectedRoute>}>
-              <Route path="/dashboard/content-creator/Game" element={<AllGames />} />
-              <Route path="/dashboard/content-creator/Route" element={<AllRoutes />} />
+              <Route path="/dashboard/content-creator/Game" element={<GameContentList />} />
+              <Route path="/dashboard/content-creator/Route" element={<RouteContentList />} />
               <Route path="/dashboard/content-creator/settings" element={<div>Settings page coming soon</div>} />
           </Route>
 
@@ -64,8 +64,8 @@ const App = () => {
               <ProtectedRoute allowedRoles={['editor']}>
                 <Dashboard />
               </ProtectedRoute>}>
-              <Route path="/dashboard/editor/Game" element={<AllGames />} />
-              <Route path="/dashboard/editor/Route" element={<AllRoutes />} />
+              <Route path="/dashboard/editor/Game" element={<GameContentList />} />
+              <Route path="/dashboard/editor/Route" element={<RouteContentList />} />
               <Route path="/dashboard/editor/settings" element={<div>Settings page coming soon</div>} />
           </Route>
           
