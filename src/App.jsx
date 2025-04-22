@@ -14,7 +14,9 @@ import Levels from './pages/Levels'
 import Users from './pages/Users'
 import './App.css';
 import GameContentList from "./pages/GameContentList";
+import GameContentEdit from "./pages/GameContentEdit";
 import RouteContentList from "./pages/RouteContentList";
+import RouteContentEdit from "./pages/RouteContentEdit";
 import AboutInstitution from './pages/AboutInstitution'
 import ItemsPage from './pages/ItemsPage'
 
@@ -56,7 +58,9 @@ const App = () => {
                 <Dashboard />
               </ProtectedRoute>}>
               <Route path="/dashboard/content-creator/Game" element={<GameContentList />} />
+              <Route path="/dashboard/content-creator/Game/edit/:id" element={<GameContentEdit />} />
               <Route path="/dashboard/content-creator/Route" element={<RouteContentList />} />
+              <Route path="/dashboard/content-creator/Route/edit/:id" element={<RouteContentEdit />} />
               <Route path="/dashboard/content-creator/settings" element={<div>Settings page coming soon</div>} />
           </Route>
 
@@ -67,7 +71,9 @@ const App = () => {
                 <Dashboard />
               </ProtectedRoute>}>
               <Route path="/dashboard/editor/Game" element={<GameContentList />} />
+              <Route path="/dashboard/editor/Game/edit/:id" element={<GameContentEdit />} />
               <Route path="/dashboard/editor/Route" element={<RouteContentList />} />
+              <Route path="/dashboard/editor/Route/edit/:id" element={<RouteContentEdit />} />
               <Route path="/dashboard/editor/settings" element={<div>Settings page coming soon</div>} />
           </Route>
 

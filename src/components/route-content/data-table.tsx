@@ -40,6 +40,7 @@ import { Combobox } from "@/components/ui/combobox"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import { categories, contentTypes, languages, levels } from "@/lib/data"
+import { RouteContentActionHandlers } from "./columns"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -124,6 +125,10 @@ export function DataTable<TData, TValue>({
       rowSelection,
       globalFilter: searchQuery,
     },
+    meta: {
+      onEdit,
+      onDelete
+    } as RouteContentActionHandlers,
   })
 
   const handleGlobalFilter = (e: React.ChangeEvent<HTMLInputElement>) => {

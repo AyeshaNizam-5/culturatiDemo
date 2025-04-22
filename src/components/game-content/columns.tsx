@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useNavigate } from "react-router-dom"
 
 export type GameContent = {
   id: string
@@ -177,6 +178,7 @@ export const columns: ColumnDef<GameContent>[] = [
     id: "actions",
     cell: ({ row }) => {
       const gameContent = row.original
+      const navigate = useNavigate()
 
       return (
         <DropdownMenu>
@@ -197,7 +199,7 @@ export const columns: ColumnDef<GameContent>[] = [
             <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation()
-                window.location.href = `/dashboard/content-creator/Game/edit/${gameContent.id}`
+                navigate(`/dashboard/content-creator/Game/edit/${gameContent.id}`)
               }}
               className="flex items-center text-blue-600"
             >

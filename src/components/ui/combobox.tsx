@@ -45,6 +45,23 @@ export function Combobox({
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false)
   const [searchQuery, setSearchQuery] = React.useState("")
+  
+  // Find display text for current value
+  const getDisplayText = React.useCallback(() => {
+    // First try finding by exact value match
+    const foundOption = options.find((option) => option.value === value);
+    if (foundOption) return foundOption.label;
+    
+    // If not found by value, try matching by label
+    const foundByLabel = options.find((option) => 
+      option.label.toLowerCase() === value.toLowerCase() || 
+      option.value.toLowerCase() === value.toLowerCase()
+    );
+    if (foundByLabel) return foundByLabel.label;
+    
+    // If all else fails, just return the value itself
+    return value || placeholder;
+  }, [options, value, placeholder]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -55,9 +72,7 @@ export function Combobox({
           aria-expanded={open}
           className={cn("w-full justify-between", className)}
         >
-          {value
-            ? options.find((option) => option.value === value)?.label
-            : placeholder}
+          {getDisplayText()}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -91,7 +106,7 @@ export function Combobox({
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === option.value ? "opacity-100" : "opacity-0"
+                      (value === option.value || value === option.label) ? "opacity-100" : "opacity-0"
                     )}
                   />
                   {option.label}

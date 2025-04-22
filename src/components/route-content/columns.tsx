@@ -13,6 +13,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+// Define a handler context type that can be passed to the columns
+export interface RouteContentActionHandlers {
+  onEdit?: (id: string) => void;
+  onDelete?: (ids: string[]) => void;
+}
+
 export type RouteContent = {
   id: string
   contentName: string
@@ -23,6 +29,16 @@ export type RouteContent = {
   relatedItem: string
   author: string
   lastEditor: string
+  description?: string
+  routePoints?: {
+    name: string
+    latitude: string
+    longitude: string
+    description?: string
+  }[]
+  multimediaContent?: string[]
+  websiteURL?: string[]
+  additionalInfo?: string
 }
 
 export const columns: ColumnDef<RouteContent>[] = [
@@ -175,8 +191,11 @@ export const columns: ColumnDef<RouteContent>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
       const routeContent = row.original
+      
+      // Get access to the edit/delete handlers from the table meta
+      const { onEdit, onDelete } = table.options.meta as RouteContentActionHandlers || {}
 
       return (
         <DropdownMenu>
@@ -197,7 +216,9 @@ export const columns: ColumnDef<RouteContent>[] = [
             <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation()
-                window.location.href = `/dashboard/content-creator/Route/edit/${routeContent.id}`
+                if (onEdit) {
+                  onEdit(routeContent.id)
+                }
               }}
               className="flex items-center text-blue-600"
             >
@@ -207,7 +228,9 @@ export const columns: ColumnDef<RouteContent>[] = [
               onClick={(e) => {
                 e.stopPropagation()
                 if (window.confirm("Are you sure you want to delete this item?")) {
-                  console.log("Delete: ", routeContent.id)
+                  if (onDelete) {
+                    onDelete([routeContent.id])
+                  }
                 }
               }}
               className="flex items-center text-red-600"

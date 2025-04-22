@@ -15,6 +15,7 @@ import {
   FilterFn,
 } from "@tanstack/react-table"
 import { Check, ChevronDown, MoreHorizontal, X } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -59,6 +60,7 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
   const [searchQuery, setSearchQuery] = React.useState("")
+  const navigate = useNavigate()
   
   // Enhanced filter options that match the sample data
   const [languageOptions] = React.useState(languages)
