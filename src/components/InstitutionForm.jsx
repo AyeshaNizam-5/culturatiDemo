@@ -1,144 +1,186 @@
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
+
+import React from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { toast } from "sonner"
+
+import { Button } from "@/components/ui/button"
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Combobox } from "@/components/ui/combobox"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
+
+const institutionTypes = [
+  { label: "Museum", value: "Museum" },
+  { label: "Heritage Site", value: "Heritage Site" },
+  { label: "Castle", value: "Castle" },
+  { label: "Art Gallery", value: "Art Gallery" },
+  { label: "Theater", value: "Theater" },
+  { label: "Cultural Center", value: "Cultural Center" }
+]
+
+
+const FormSchema = z.object({
+  institutionName: z.string().min(1, "Institution Name is required"),
+  institutionCode: z.string().min(1, "Institution Code is required"),
+  type: z.string().min(1, "Institution Type is required"),
+  logo: z.any().optional(),
+  image: z.any().optional(),
+})
 
 const InstitutionForm = ({ institution, onClose, onSubmit }) => {
-  const [formData, setFormData] = useState(
-    institution || {
-      institutionName: "",
-      institutionCode: "",
+  const form = useForm({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      institutionName: institution?.institutionName || "",
+      institutionCode: institution?.institutionCode || "",
+      type: institution?.type || "",
       logo: null,
       image: null,
-      type: ""
-    }
-  );
+    },
+  })
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(formData);
-  };
+  const handleSubmit = async (values) => {
+    const payload = {
+      ...values,
+      logo: form.watch("logo"),
+      image: form.watch("image"),
+    }
+
+    onSubmit(payload)
+    toast.success(institution ? "Institution updated" : "Institution created")
+
+    // Uncomment and connect to backend later:
+    // try {
+    //   const formData = new FormData()
+    //   formData.append("institutionName", values.institutionName)
+    //   formData.append("institutionCode", values.institutionCode)
+    //   formData.append("type", values.type)
+    //   if (values.logo) formData.append("logo", values.logo)
+    //   if (values.image) formData.append("image", values.image)
+    //
+    //   const response = await axios.post("/api/institutions", formData)
+    //   toast.success("Institution saved successfully")
+    // } catch (err) {
+    //   toast.error("Failed to save institution")
+    // }
+  }
 
   return (
-    <div className="fixed inset-0 bg-[#F9FAFA] bg-opacity-95 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg w-full max-w-2xl border border-[#cde4ed] shadow-lg">
-        <div className="flex justify-between items-center p-6 border-b border-[#c9e3ed]">
-          <h2 className="text-xl font-semibold text-[#0b6085]">
-            {institution ? 'Edit Cultural Institution' : 'Add Cultural Institution'}
-          </h2>
-          <button 
-            onClick={onClose} 
-            className="text-[#88b8c4] hover:text-[#0b6085] transition-colors"
+    <Dialog open onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl bg-white text-[#0b6085]">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-6 p-4 md:p-6"
           >
-            <X size={24} />
-          </button>
-        </div>
+            <h2 className="text-2xl font-bold">
+              {institution ? "Edit Cultural Institution" : "Add Cultural Institution"}
+            </h2>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-[#0b6085] mb-2">
-                Institution Name
-              </label>
-              <input
-                type="text"
-                value={formData.institutionName}
-                onChange={(e) => setFormData({...formData, institutionName: e.target.value})}
-                className="w-full bg-[#F9FAFA] rounded-lg px-4 py-2.5 text-[#0b6085] 
-                         border border-[#b5dbe3] focus:ring-2 focus:ring-[#5ec5f1] 
-                         focus:border-transparent outline-none"
-                placeholder="e.g., National Museum of History"
-              />
+            <FormField
+              control={form.control}
+              name="institutionName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Institution Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., National Museum of History" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="institutionCode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Institution Code</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., NMH001" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Institution Type</FormLabel>
+                  <Combobox
+                    options={institutionTypes}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select or type institution type"
+                    emptyMessage="No institution type found."
+                    searchPlaceholder="Search institution types..."
+                  />
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="logo"
+              render={({ field: { onChange } }) => (
+                <FormItem>
+                  <FormLabel>Logo (optional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => onChange(e.target.files[0])}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field: { onChange } }) => (
+                <FormItem>
+                  <FormLabel>Cover Image (optional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => onChange(e.target.files[0])}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <div className="flex justify-end gap-4 pt-4">
+              <Button type="button" variant="outline" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button type="submit">
+                {institution ? "Update" : "Create"}
+              </Button>
             </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  )
+}
 
-            <div>
-              <label className="block text-sm font-medium text-[#0b6085] mb-2">
-                Institution Code
-              </label>
-              <input
-                type="text"
-                value={formData.institutionCode}
-                onChange={(e) => setFormData({...formData, institutionCode: e.target.value})}
-                className="w-full bg-[#F9FAFA] rounded-lg px-4 py-2.5 text-[#0b6085] 
-                         border border-[#b5dbe3] focus:ring-2 focus:ring-[#5ec5f1] 
-                         focus:border-transparent outline-none"
-                placeholder="e.g., NMH001"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[#0b6085] mb-2">
-                Type
-              </label>
-              <select
-                value={formData.type}
-                onChange={(e) => setFormData({...formData, type: e.target.value})}
-                className="w-full bg-[#F9FAFA] rounded-lg px-4 py-2.5 text-[#0b6085] 
-                         border border-[#b5dbe3] focus:ring-2 focus:ring-[#5ec5f1] 
-                         focus:border-transparent outline-none"
-              >
-                <option value="" className="bg-[#F9FAFA]">Select Type</option>
-                <option value="Museum" className="bg-[#F9FAFA]">Museum</option>
-                <option value="Heritage Site" className="bg-[#F9FAFA]">Heritage Site</option>
-                <option value="Castle" className="bg-[#F9FAFA]">Castle</option>
-                <option value="Art Gallery" className="bg-[#F9FAFA]">Art Gallery</option>
-                <option value="Theater" className="bg-[#F9FAFA]">Theater</option>
-                <option value="Cultural Center" className="bg-[#F9FAFA]">Cultural Center</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[#0b6085] mb-2">
-                Logo
-              </label>
-              <input
-                type="file"
-                onChange={(e) => setFormData({...formData, logo: e.target.files[0]})}
-                className="w-full bg-[#F9FAFA] rounded-lg px-4 py-2.5 text-[#0b6085]
-                         border border-[#b5dbe3] focus:ring-2 focus:ring-[#5ec5f1] 
-                         focus:border-transparent outline-none file:mr-4 
-                         file:py-2 file:px-4 file:rounded-full file:border-0
-                         file:text-sm file:font-medium file:bg-[#5ec5f1] 
-                         file:text-white hover:file:bg-[#0b6085]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[#0b6085] mb-2">
-                Cover Image
-              </label>
-              <input
-                type="file"
-                onChange={(e) => setFormData({...formData, image: e.target.files[0]})}
-                className="w-full bg-[#F9FAFA] rounded-lg px-4 py-2.5 text-[#0b6085]
-                         border border-[#b5dbe3] focus:ring-2 focus:ring-[#5ec5f1] 
-                         focus:border-transparent outline-none file:mr-4 
-                         file:py-2 file:px-4 file:rounded-full file:border-0
-                         file:text-sm file:font-medium file:bg-[#5ec5f1] 
-                         file:text-white hover:file:bg-[#0b6085]"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-4 pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 bg-[#88b8c4] hover:bg-[#b5dbe3] text-white 
-                       rounded-lg transition-colors font-medium"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-[#5ec5f1] hover:bg-[#0b6085] text-white 
-                       rounded-lg transition-colors font-medium"
-            >
-              {institution ? 'Update' : 'Create'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-};
-
-export default InstitutionForm;
+export default InstitutionForm
