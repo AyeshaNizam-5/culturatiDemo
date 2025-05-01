@@ -1,8 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../../components/Navbar';
-import { Building2, Users, LayersIcon, FolderTree, Settings } from 'lucide-react';
+import {
+  Building2,
+  Users,
+  LayersIcon,
+  FolderTree,
+  Settings
+} from 'lucide-react';
+
+import AppSidebar from '@/components/app-sidebar';
+import {
+  SidebarProvider,
+  SidebarInset,
+  SidebarTrigger
+} from '@/components/ui/sidebar';
+import { Separator } from '@/components/ui/separator';
+
 import institutionService from '../../services/institutionService';
 
 const AdminDashboard = () => {
@@ -10,7 +24,6 @@ const AdminDashboard = () => {
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  
   const navItems = [
     { path: `institution`, label: 'Institution Details', icon: Building2 },
     { path: `users`, label: 'Users', icon: Users },
@@ -24,10 +37,9 @@ const AdminDashboard = () => {
       try {
         const response = await institutionService.getAll();
         const userInstitution = response.data.find(inst => inst.id === user.institutionId);
-        
+
         if (userInstitution) {
           setAssignedInstitution(userInstitution);
-          // Redirect to institution dashboard
           navigate(`/institution/${userInstitution.id}/institution`);
         }
       } catch (error) {
@@ -39,19 +51,26 @@ const AdminDashboard = () => {
   }, [user, navigate]);
 
   if (!assignedInstitution) {
-    return <div>Loading...</div>;
+    return <div className="h-screen flex items-center justify-center text-[#0b6085]">Loading...</div>;
   }
 
   return (
-    <div className="flex">
-      <Navbar navItems={navItems} />
-      <div className="flex-1 ml-[18%] bg-gray-50 p-6 overflow-auto">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">
-          {assignedInstitution.institutionName} Dashboard
-        </h1>
-        {/* Dashboard content will be rendered through nested routes */}
-      </div>
-    </div>
+    <SidebarProvider>
+      <AppSidebar navItems={navItems} />
+      <SidebarInset>
+        <header className="flex h-16 items-center gap-2 px-4 border-b border-gray-200 bg-white">
+          <SidebarTrigger className="-ml-1" />
+          <Separator orientation="vertical" className="h-6 mx-2" />
+          <h1 className="text-2xl font-bold text-[#0b6085]">
+            {assignedInstitution.institutionName} Dashboard
+          </h1>
+        </header>
+
+        <main className="p-6 bg-gray-50 min-h-[calc(100vh-4rem)]">
+          {/* Dashboard content will be rendered through nested routes */}
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 };
 

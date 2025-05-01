@@ -1,8 +1,9 @@
 import InstitutionProfileCard from "@/components/InstitutionProfileCard";
 import { useSelector } from "react-redux";
 
+
 const AboutInstitution = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { role } = useSelector(state => state.auth);
 
   const mockInstitution = {
     institutionName: "National Museum of History",
