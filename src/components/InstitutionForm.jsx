@@ -1,6 +1,7 @@
+"use client"
 
-import React from "react"
-import { useForm } from "react-hook-form"
+import React, { useState } from "react"
+import { useForm, useFieldArray } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { toast } from "sonner"
@@ -15,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Combobox } from "@/components/ui/combobox"
+import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 
 const institutionTypes = [
@@ -24,28 +25,40 @@ const institutionTypes = [
   { label: "Castle", value: "Castle" },
   { label: "Art Gallery", value: "Art Gallery" },
   { label: "Theater", value: "Theater" },
-  { label: "Cultural Center", value: "Cultural Center" }
+  { label: "Cultural Center", value: "Cultural Center" },
 ]
-
 
 const FormSchema = z.object({
   institutionName: z.string().min(1, "Institution Name is required"),
   institutionCode: z.string().min(1, "Institution Code is required"),
   type: z.string().min(1, "Institution Type is required"),
+  address: z.string().optional(),
+  about: z.string().optional(),
   logo: z.any().optional(),
   image: z.any().optional(),
+  funFacts: z.array(z.object({ text: z.string().min(0) })).optional(),
 })
 
 const InstitutionForm = ({ institution, onClose, onSubmit }) => {
+  const [showOptions, setShowOptions] = useState(false)
+
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       institutionName: institution?.institutionName || "",
       institutionCode: institution?.institutionCode || "",
       type: institution?.type || "",
+      address: institution?.address || "",
+      about: institution?.about || "",
       logo: null,
       image: null,
+      funFacts: institution?.funFacts || [{ text: "" }],
     },
+  })
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "funFacts",
   })
 
   const handleSubmit = async (values) => {
@@ -57,82 +70,135 @@ const InstitutionForm = ({ institution, onClose, onSubmit }) => {
 
     onSubmit(payload)
     toast.success(institution ? "Institution updated" : "Institution created")
-
-    // Uncomment and connect to backend later:
-    // try {
-    //   const formData = new FormData()
-    //   formData.append("institutionName", values.institutionName)
-    //   formData.append("institutionCode", values.institutionCode)
-    //   formData.append("type", values.type)
-    //   if (values.logo) formData.append("logo", values.logo)
-    //   if (values.image) formData.append("image", values.image)
-    //
-    //   const response = await axios.post("/api/institutions", formData)
-    //   toast.success("Institution saved successfully")
-    // } catch (err) {
-    //   toast.error("Failed to save institution")
-    // }
   }
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl bg-white text-[#0b6085]">
+      <DialogContent className="max-w-2xl bg-white text-[#0b6085] overflow-auto max-h-screen">
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-6 p-4 md:p-6"
-          >
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6 p-4 md:p-6">
             <h2 className="text-2xl font-bold">
               {institution ? "Edit Cultural Institution" : "Add Cultural Institution"}
             </h2>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="institutionName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Institution Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., National Museum of History" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="institutionCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Institution Code</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., NMH001" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem className="relative">
+                    <FormLabel>Institution Type</FormLabel>
+                    <div className="relative">
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="e.g., Museum"
+                          onFocus={() => setShowOptions(true)}
+                          onBlur={() => setTimeout(() => setShowOptions(false), 150)}
+                        />
+                      </FormControl>
+                      {showOptions && (
+                        <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md max-h-60 overflow-auto">
+                          {institutionTypes
+                            .filter(opt =>
+                              opt.label.toLowerCase().includes(field.value.toLowerCase())
+                            )
+                            .map(opt => (
+                              <div
+                                key={opt.value}
+                                onMouseDown={() => field.onChange(opt.value)}
+                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                              >
+                                {opt.label}
+                              </div>
+                            ))}
+                        </div>
+                      )}
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Address</FormLabel>
+                    <FormControl>
+                      <Input placeholder="123 History Ave, City" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <FormField
               control={form.control}
-              name="institutionName"
+              name="about"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Institution Name</FormLabel>
+                  <FormLabel>About</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., National Museum of History" {...field} />
+                    <Textarea placeholder="Describe the institution..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="institutionCode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Institution Code</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., NMH001" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Institution Type</FormLabel>
-                  <Combobox
-                    options={institutionTypes}
-                    value={field.value}
-                    onChange={field.onChange}
-                    placeholder="Select or type institution type"
-                    emptyMessage="No institution type found."
-                    searchPlaceholder="Search institution types..."
-                  />
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div>
+              <FormLabel>Fun Facts</FormLabel>
+              {fields.map((field, index) => (
+                <div key={field.id} className="flex gap-2 mt-2">
+                  <Input {...form.register(`funFacts.${index}.text`)} placeholder={`Fun fact #${index + 1}`} />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => remove(index)}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ))}
+              <Button
+                type="button"
+                className="mt-2"
+                onClick={() => append({ text: "" })}
+              >
+                + Add Fun Fact
+              </Button>
+            </div>
 
             <FormField
               control={form.control}
@@ -144,7 +210,7 @@ const InstitutionForm = ({ institution, onClose, onSubmit }) => {
                     <Input
                       type="file"
                       accept="image/*"
-                      onChange={(e) => onChange(e.target.files[0])}
+                      onChange={(e) => onChange(e.target.files?.[0])}
                     />
                   </FormControl>
                 </FormItem>
@@ -161,7 +227,7 @@ const InstitutionForm = ({ institution, onClose, onSubmit }) => {
                     <Input
                       type="file"
                       accept="image/*"
-                      onChange={(e) => onChange(e.target.files[0])}
+                      onChange={(e) => onChange(e.target.files?.[0])}
                     />
                   </FormControl>
                 </FormItem>

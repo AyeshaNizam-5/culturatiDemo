@@ -36,14 +36,6 @@ export const contentTypes = [
 export const languages = [
   { value: "English", label: "English" },
   { value: "Turkish", label: "Turkish" },
-  { value: "Arabic", label: "Arabic" },
-  { value: "Spanish", label: "Spanish" },
-  { value: "French", label: "French" },
-  { value: "German", label: "German" },
-  { value: "Italian", label: "Italian" },
-  { value: "Russian", label: "Russian" },
-  { value: "Chinese", label: "Chinese" },
-  { value: "Japanese", label: "Japanese" },
 ]
 
 export const answerTypes = [
