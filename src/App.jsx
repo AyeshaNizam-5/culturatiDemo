@@ -21,6 +21,7 @@ import GameContentList from "./pages/GameContentList";
 import GameContentEdit from "./pages/GameContentEdit";
 import RouteContentList from "./pages/RouteContentList";
 import RouteContentEdit from "./pages/RouteContentEdit";
+import SettingsPage from "./pages/SettingsPage"
 
 import './App.css';
 
@@ -32,7 +33,7 @@ const App = () => {
 
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/settings" element={<div>Settings page coming soon</div>} />
+          <Route path="/settings" element={<SettingsPage />} />
 
          
           <Route
@@ -48,7 +49,7 @@ const App = () => {
             <Route path="categories" element={<Categories />} />
             <Route path="levels" element={<Levels />} />
             <Route path="users" element={<Users />} />
-            <Route path="settings" element={<div>Settings page coming soon</div>} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
 
       
@@ -75,7 +76,7 @@ const App = () => {
             <Route path="Game/edit/:id" element={<GameContentEdit />} />
             <Route path="Route" element={<RouteContentList />} />
             <Route path="Route/edit/:id" element={<RouteContentEdit />} />
-            <Route path="settings" element={<div>Settings page coming soon</div>} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
 
          
@@ -91,7 +92,7 @@ const App = () => {
             <Route path="Game/edit/:id" element={<GameContentEdit />} />
             <Route path="Route" element={<RouteContentList />} />
             <Route path="Route/edit/:id" element={<RouteContentEdit />} />
-            <Route path="settings" element={<div>Settings page coming soon</div>} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
 
           
@@ -105,7 +106,7 @@ const App = () => {
           >
             <Route path="AboutInstitution" element={<AboutInstitution />} />
             <Route path="Items" element={<ItemsPage />} />
-            <Route path="settings" element={<div>Settings page coming soon</div>} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
 
           
@@ -130,7 +131,7 @@ const App = () => {
             <Route path="users" element={<Users />} />
             <Route path="levels" element={<Levels />} />
             <Route path="categories" element={<Categories />} />
-            <Route path="settings" element={<div>Settings page coming soon</div>} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
 
           
