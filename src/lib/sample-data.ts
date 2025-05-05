@@ -11,7 +11,9 @@ export const sampleGameContent: GameContent[] = [
     gameType: "Individual",
     relatedItem: "Hagia Sophia",
     author: "tst creator",
-    lastEditor: "CULTURATI E.U"
+    lastEditor: "CULTURATI E.U",
+    status: "Pending",
+    creationDate: "2025-04-29T14:00:00Z"
   },
   {
     id: "2",
@@ -22,7 +24,9 @@ export const sampleGameContent: GameContent[] = [
     gameType: "Individual",
     relatedItem: "Arnoldo",
     author: "tst creator",
-    lastEditor: "CULTURATI E.U"
+    lastEditor: "CULTURATI E.U",
+    status: "Pending",
+    creationDate: "2025-04-29T13:50:00Z"
   },
   {
     id: "3",
@@ -33,7 +37,9 @@ export const sampleGameContent: GameContent[] = [
     gameType: "Individual",
     relatedItem: "testItem",
     author: "tst creator",
-    lastEditor: "tst creator"
+    lastEditor: "tst creator",
+    status: "Pending",
+    creationDate: "2025-04-29T13:40:00Z"
   },
   {
     id: "4",
@@ -44,7 +50,9 @@ export const sampleGameContent: GameContent[] = [
     gameType: "Group",
     relatedItem: "Arnoldo",
     author: "tst creator",
-    lastEditor: "tst editor"
+    lastEditor: "tst editor",
+    status: "Pending",
+    creationDate: "2025-04-29T13:30:00Z"
   },
   {
     id: "5",
@@ -55,7 +63,9 @@ export const sampleGameContent: GameContent[] = [
     gameType: "Individual",
     relatedItem: "Arnoldo",
     author: "tst creator",
-    lastEditor: "tst creator"
+    lastEditor: "tst creator",
+    status: "Pending",
+    creationDate: "2025-04-29T13:20:00Z"
   },
   {
     id: "6",
@@ -66,7 +76,9 @@ export const sampleGameContent: GameContent[] = [
     gameType: "Family",
     relatedItem: "Arnoldo",
     author: "tst creator",
-    lastEditor: "CULTURATI E.U"
+    lastEditor: "CULTURATI E.U",
+    status: "Pending",
+    creationDate: "2025-04-29T13:10:00Z"
   },
   {
     id: "7",
@@ -77,7 +89,9 @@ export const sampleGameContent: GameContent[] = [
     gameType: "Individual",
     relatedItem: "ArcadeTriumph",
     author: "tst creator",
-    lastEditor: "tst creator"
+    lastEditor: "tst creator",
+    status: "Pending",
+    creationDate: "2025-04-29T13:00:00Z"
   },
   {
     id: "8",
@@ -88,7 +102,9 @@ export const sampleGameContent: GameContent[] = [
     gameType: "Individual",
     relatedItem: "Arnoldo",
     author: "tst creator",
-    lastEditor: "CULTURATI E.U"
+    lastEditor: "CULTURATI E.U",
+    status: "Pending",
+    creationDate: "2025-04-29T12:50:00Z"
   },
   {
     id: "9",
@@ -99,7 +115,9 @@ export const sampleGameContent: GameContent[] = [
     gameType: "Individual",
     relatedItem: "Arnoldo",
     author: "tst creator",
-    lastEditor: "CULTURATI E.U"
+    lastEditor: "CULTURATI E.U",
+    status: "Pending",
+    creationDate: "2025-04-29T12:40:00Z"
   },
   {
     id: "10",
@@ -110,7 +128,9 @@ export const sampleGameContent: GameContent[] = [
     gameType: "Individual",
     relatedItem: "Demo-Item",
     author: "tst creator",
-    lastEditor: "CULTURATI E.U"
+    lastEditor: "CULTURATI E.U",
+    status: "Pending",
+    creationDate: "2025-04-29T12:30:00Z"
   },
   {
     id: "11",
@@ -121,7 +141,9 @@ export const sampleGameContent: GameContent[] = [
     gameType: "Group",
     relatedItem: "ArcadeTriumph",
     author: "tst creator",
-    lastEditor: "CULTURATI E.U"
+    lastEditor: "CULTURATI E.U",
+    status: "Pending",
+    creationDate: "2025-04-29T12:20:00Z"
   }
 ]
 

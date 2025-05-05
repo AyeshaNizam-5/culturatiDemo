@@ -82,13 +82,6 @@ export function DataTable<TData, TValue>({
     { value: "Individual", label: "Individual" },
     { value: "Group", label: "Group" },
     { value: "Family", label: "Family" },
-    { value: "Walking Tour", label: "Walking Tour" },
-    { value: "Museum Tour", label: "Museum Tour" },
-    { value: "Educational", label: "Educational" },
-    { value: "Food Tour", label: "Food Tour" },
-    { value: "Cultural Experience", label: "Cultural Experience" },
-    { value: "Guided Tour", label: "Guided Tour" },
-    { value: "Historical Tour", label: "Historical Tour" },
   ])
   const [showFilters, setShowFilters] = React.useState(true)
 
