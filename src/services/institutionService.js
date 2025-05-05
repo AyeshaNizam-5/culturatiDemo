@@ -1,5 +1,6 @@
 import api from './api';
 import { ENDPOINTS } from '../config/apiConfig';
+import { m3, m4, m2, m1 } from '../assets';
 
 // Mock data
 const mockInstitutions = [
@@ -7,16 +8,16 @@ const mockInstitutions = [
     id: 1,
     institutionName: "National Museum of History",
     institutionCode: "NMH001",
-    logo: "https://placehold.co/150x150",
-    image: "https://placehold.co/800x400",
+    logo: m3,
+    image: m4,
     type: "Museum"
   },
   {
     id: 2,
     institutionName: "Royal Heritage Castle",
     institutionCode: "RHC002",
-    logo: "https://placehold.co/150x150",
-    image: "https://placehold.co/800x400",
+    logo: m2,
+    image: m1,
     type: "Castle"
   }
 ];
