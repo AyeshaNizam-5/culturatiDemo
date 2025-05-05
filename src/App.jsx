@@ -41,14 +41,10 @@ const App = () => {
             element={
               <ProtectedRoute allowedRoles={['super_admin']}>
                 <Dashboard />
-              </ProtectedRoute>
-            }
-          >
-            
+                </ProtectedRoute>
+              }
+            >
             <Route index element={<InstitutionsList />} />
-            <Route path="categories" element={<Categories />} />
-            <Route path="levels" element={<Levels />} />
-            <Route path="users" element={<Users />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>
 
