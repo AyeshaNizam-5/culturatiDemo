@@ -9,13 +9,12 @@ const mockCategories = [
 ];
 
 const categoryService = {
-  getAll: async (institutionId) => {
+  getAll: async () => {
     try {
-      // When backend is ready, uncomment:
-      // const response = await api.get(`${ENDPOINTS.CATEGORIES.GET_ALL}?institutionId=${institutionId}`);
-      // return response.data;
-      const filteredCategories = mockCategories.filter(cat => cat.institutionId === parseInt(institutionId));
-      return Promise.resolve({ data: filteredCategories });
+      const response = await api.get(`${ENDPOINTS.CATEGORIES.GET_ALL}`);
+      console.log('Response:', response.data);
+      // const filteredCategories = mockCategories.filter(cat => cat.institutionId === parseInt(institutionId));
+      return Promise.resolve({ data: response.data });
     } catch (error) {
       console.error('Error fetching categories:', error);
       throw error;
@@ -24,13 +23,15 @@ const categoryService = {
 
   create: async (categoryData, institutionId) => {
     try {
-      const newCategory = { 
-        id: mockCategories.length + 1, 
-        ...categoryData,
-        institutionId: parseInt(institutionId)
-      };
-      mockCategories.push(newCategory);
-      return Promise.resolve({ data: newCategory });
+      // const newCategory = { 
+      //   id: mockCategories.length + 1, 
+      //   ...categoryData,
+      //   institutionId: parseInt(institutionId)
+      // };
+      // mockCategories.push(newCategory);
+      // return Promise.resolve({ data: newCategory });
+      const response = await api.post(`${ENDPOINTS.CATEGORIES.CREATE}`, categoryData);
+      console.log('Response:', response);
     } catch (error) {
       console.error('Error creating category:', error);
       throw error;
@@ -39,12 +40,14 @@ const categoryService = {
 
   update: async (id, categoryData, institutionId) => {
     try {
-      const index = mockCategories.findIndex(c => c.id === id && c.institutionId === parseInt(institutionId));
-      if (index !== -1) {
-        mockCategories[index] = { ...mockCategories[index], ...categoryData };
-        return Promise.resolve({ data: mockCategories[index] });
-      }
-      throw new Error('Category not found');
+      // const index = mockCategories.findIndex(c => c.id === id && c.institutionId === parseInt(institutionId));
+      // if (index !== -1) {
+      //   mockCategories[index] = { ...mockCategories[index], ...categoryData };
+      //   return Promise.resolve({ data: mockCategories[index] });
+      // }
+      // throw new Error('Category not found');
+      const newCategoryData = await api.put(ENDPOINTS.CATEGORIES.UPDATE(id), categoryData);
+      return Promise.resolve({ data: newCategoryData });
     } catch (error) {
       console.error('Error updating category:', error);
       throw error;
@@ -53,11 +56,14 @@ const categoryService = {
 
   delete: async (id, institutionId) => {
     try {
-      const index = mockCategories.findIndex(c => c.id === id && c.institutionId === parseInt(institutionId));
-      if (index !== -1) {
-        mockCategories.splice(index, 1);
-        return Promise.resolve({ success: true });
-      }
+      // const index = mockCategories.findIndex(c => c.id === id && c.institutionId === parseInt(institutionId));
+      // if (index !== -1) {
+      //   mockCategories.splice(index, 1);
+      //   return Promise.resolve({ success: true });
+      // }
+      const response = await api.delete(ENDPOINTS.CATEGORIES.DELETE(id));
+      console.log('Response:', response.data);
+      return Promise.resolve({ success: true });
       throw new Error('Category not found');
     } catch (error) {
       console.error('Error deleting category:', error);

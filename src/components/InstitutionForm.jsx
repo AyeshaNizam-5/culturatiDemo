@@ -41,13 +41,13 @@ const FormSchema = z.object({
 
 const InstitutionForm = ({ institution, onClose, onSubmit }) => {
   const [showOptions, setShowOptions] = useState(false)
-
+  console.log("InstitutionForm", institution)
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       institutionName: institution?.institutionName || "",
       institutionCode: institution?.institutionCode || "",
-      type: institution?.type || "",
+      type: institution?.institutionType || "",
       address: institution?.address || "",
       about: institution?.about || "",
       logo: null,

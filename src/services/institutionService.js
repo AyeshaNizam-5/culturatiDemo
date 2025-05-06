@@ -24,10 +24,13 @@ const mockInstitutions = [
 const institutionService = {
   getAll: async () => {
     try {
-      // When backend is ready, uncomment:
-      // const response = await api.get(ENDPOINTS.INSTITUTIONS.GET_ALL);
-      // return response.data;
-      return Promise.resolve({ data: mockInstitutions });
+      const response = await api.get(`${ENDPOINTS.INSTITUTIONS.GET_ALL}`); 
+    
+      if (response.status === 200) {
+        console.log('Response:', response.data);
+        return {data: response.data};
+      }
+      throw new Error('Institution not found');
     } catch (error) {
       console.error('Error fetching institutions:', error);
       throw error;
@@ -36,17 +39,38 @@ const institutionService = {
 
   create: async (institutionData) => {
     try {
-      // Mock create
-      const newInstitution = {
-        id: mockInstitutions.length + 1,
-        ...institutionData,
-        logo: institutionData.logo || "https://placehold.co/150x150",
-        image: institutionData.image || "https://placehold.co/800x400"
-      };
-      mockInstitutions.push(newInstitution);
-      return Promise.resolve({ data: newInstitution });
+      // // Mock create
+      // const newInstitution = {
+      //   id: mockInstitutions.length + 1,
+      //   ...institutionData,
+      //   logo: institutionData.logo || "https://placehold.co/150x150",
+      //   image: institutionData.image || "https://placehold.co/800x400"
+      // };
+      // mockInstitutions.push(newInstitution);
+      // return Promise.resolve({ data: newInstitution });
+      const response = await api.post(`${ENDPOINTS.INSTITUTIONS.CREATE}`, institutionData, 
+        {headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('Response:', response);
+      return { data: response.data };
     } catch (error) {
       console.error('Error creating institution:', error);
+      throw error;
+    }
+  },
+
+  getById: async (id) => {
+    try {
+      const response = await api.get(`${ENDPOINTS.INSTITUTIONS.GET_BY_ID}`);
+      if (response.status === 200) {
+        console.log('Response:', response.data);
+        return { data: response.data };
+      }
+      throw new Error('Institution not found');
+    } catch (error) {
+      console.error('Error fetching institution:', error);
       throw error;
     }
   },

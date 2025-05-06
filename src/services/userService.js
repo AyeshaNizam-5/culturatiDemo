@@ -93,8 +93,12 @@ const userService = {
   getAll: async (institutionId) => {
     try {
       // Only returns users for the specific institution
-      const filteredUsers = mockUsers.filter(user => user.institutionId === parseInt(institutionId));
-      return Promise.resolve({ data: filteredUsers });
+      //const filteredUsers = mockUsers.filter(user => user.institutionId === parseInt(institutionId));
+      const response = await api.get(`${ENDPOINTS.USERS.GET_ALL}`);
+      if (response.status === 200) {
+        console.log('Response:', response.data);
+        return {data: response.data};
+      }
     } catch (error) {
       console.error('Error fetching users:', error);
       throw error;
@@ -103,15 +107,22 @@ const userService = {
 
   create: async (userData, institutionId) => {
     try {
-      // Automatically assigns the institution
-      const newUser = {
-        id: mockUsers.length + 1,
+      console.log('User data:', userData);
+      const primaryUser = {
         ...userData,
-        institutionId: parseInt(institutionId),
-        status: 'Active'
+        assignedInstitution: institutionId,
       };
-      mockUsers.push(newUser);
-      return Promise.resolve({ data: newUser });
+      console.log('Primary User:', primaryUser);
+      const tenantUser = {
+        ...userData,
+        name: `${userData.firstName} ${userData.lastName}`,
+      };
+      console.log('Tenant User:', tenantUser);
+      const primaryInitialization = await api.post(`${ENDPOINTS.AUTH.REGISTER}`, primaryUser);
+      console.log('Primary Initialization:', primaryInitialization);
+      const response = await api.post(`${ENDPOINTS.USERS.CREATE}`, tenantUser);
+      console.log('Response:', response);
+      return ({ data: response.data });
     } catch (error) {
       console.error('Error creating user:', error);
       throw error;

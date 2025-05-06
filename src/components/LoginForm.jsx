@@ -41,6 +41,9 @@ const LoginForm = (props) => {
                 case 'content_creator':
                     navigate('/dashboard/content-creator');
                     break;
+                case 'editor':
+                    navigate('/dashboard/editor');
+                    break;
                 default:
                     navigate('/unauthorized');
                     break;

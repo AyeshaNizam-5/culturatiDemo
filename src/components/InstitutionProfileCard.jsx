@@ -9,6 +9,8 @@ const InstitutionProfileCard = ({ institution, onSubmit, editable = true }) => {
   const [isEditing, setIsEditing] = useState(false);
   if (!institution) return null;
 
+  console.log("InstitutionProfileCard", institution);
+
   const handleUpdate = (data) => {
     onSubmit(data);
     setIsEditing(false);
@@ -36,7 +38,7 @@ const InstitutionProfileCard = ({ institution, onSubmit, editable = true }) => {
         </div>
         <div>
           <p className="font-semibold text-[#0b6085]">Type:</p>
-          <p className="text-[#6193a9]">{institution.type}</p>
+          <p className="text-[#6193a9]">{institution.institutionType}</p>
         </div>
         <div>
           <p className="font-semibold text-[#0b6085]">Address:</p>
@@ -53,7 +55,7 @@ const InstitutionProfileCard = ({ institution, onSubmit, editable = true }) => {
         <p className="font-semibold text-[#0b6085] mb-1">Fun Facts:</p>
         <ul className="list-disc list-inside text-[#6193a9]">
           {institution.funFacts?.map((fact, idx) => (
-            <li key={idx}>{fact.text}</li>
+            <li key={idx}>{fact}</li>
           ))}
         </ul>
       </div>
