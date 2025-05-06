@@ -61,6 +61,11 @@ export function DataTable<TData, TValue>({
   const [rowSelection, setRowSelection] = React.useState({})
   const [searchQuery, setSearchQuery] = React.useState("")
   const navigate = useNavigate()
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 10, 
+  })
+  
   
   // Enhanced filter options that match the sample data
   const [languageOptions] = React.useState(languages)
@@ -84,6 +89,13 @@ export function DataTable<TData, TValue>({
     { value: "Group", label: "Group" },
     { value: "Family", label: "Family" },
   ])
+
+  const [statusOptions] = React.useState([
+    { value: "Pending", label: "Pending" },
+    { value: "Approved", label: "Approved" },
+    { value: "Rejected", label: "Rejected" }
+  ])
+  
   const [showFilters, setShowFilters] = React.useState(true)
 
   // Create a custom case-insensitive filter function
@@ -101,6 +113,7 @@ export function DataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
+    onPaginationChange: setPagination,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -118,6 +131,7 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
       globalFilter: searchQuery,
+      pagination,
     },
   })
 
@@ -167,6 +181,8 @@ export function DataTable<TData, TValue>({
   const categoryFilter = table.getColumn("category")?.getFilterValue() as string[] || []
   const levelFilter = table.getColumn("level")?.getFilterValue() as string[] || []
   const gameTypeFilter = table.getColumn("gameType")?.getFilterValue() as string[] || []
+  const statusFilter = table.getColumn("status")?.getFilterValue() as string[] || []
+
 
   // Check if any filters are active
   const hasActiveFilters = languageFilter.length > 0 || 
@@ -233,6 +249,38 @@ export function DataTable<TData, TValue>({
                   </Badge>
                 ))}
               </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Status</label>
+                <Combobox
+                  options={statusOptions}
+                  value=""
+                  onChange={(value) => updateFilter("status", value)}
+                  placeholder="Filter by status"
+                  emptyMessage="No statuses found"
+                  searchPlaceholder="Search statuses"
+                />
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {statusFilter.map(status => (
+                    <Badge
+                      key={status}
+                      variant="secondary"
+                      className="flex items-center gap-1"
+                    >
+                      {statusOptions.find(s => s.value.toLowerCase() === status.toLowerCase())?.label || status}
+                      <span
+                        className="ml-1 flex items-center justify-center cursor-pointer hover:bg-muted rounded-full p-0.5"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          updateFilter("status", status);
+                        }}
+                      >
+                        <X className="h-3 w-3" />
+                      </span>
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
             </div>
             
             <div className="space-y-2">
@@ -454,6 +502,19 @@ export function DataTable<TData, TValue>({
           >
             Next
           </Button>
+            <select
+              value={table.getState().pagination.pageSize}
+              onChange={(e) => {
+                table.setPageSize(Number(e.target.value))
+              }}
+              className="border rounded px-2 py-1 text-sm" >
+              {[10, 20, 50, 100].map(size => (
+                <option key={size} value={size}>
+                  Show {size}
+                </option>
+              ))}
+            </select>
+
         </div>
       </div>
     </div>

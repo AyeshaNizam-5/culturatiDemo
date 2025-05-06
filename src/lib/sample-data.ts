@@ -186,7 +186,9 @@ export const sampleRouteContent: RouteContent[] = [
     websiteURL: [
       "https://example.com/istanbul-history"
     ],
-    additionalInfo: "Comfortable walking shoes recommended. Tour duration: approximately 4 hours."
+    additionalInfo: "Comfortable walking shoes recommended. Tour duration: approximately 4 hours.",
+    status: "Pending",
+    creationDate: "2025-04-29T14:00:00Z"
   },
   {
     id: "2",
@@ -219,8 +221,11 @@ export const sampleRouteContent: RouteContent[] = [
     websiteURL: [
       "https://example.com/barcelona-art"
     ],
-    additionalInfo: "Audio guides available in multiple languages."
+    additionalInfo: "Audio guides available in multiple languages.",
+    status: "Pending",
+    creationDate: "2025-04-29T13:50:00Z"
   },
+  
   {
     id: "3",
     contentName: "Ancient Roman architecture discovery",
@@ -259,7 +264,9 @@ export const sampleRouteContent: RouteContent[] = [
     websiteURL: [
       "https://example.com/roman-architecture"
     ],
-    additionalInfo: "Expert guide specializing in Roman architectural history."
+    additionalInfo: "Expert guide specializing in Roman architectural history.",
+    status: "Pending",
+    creationDate: "2025-04-29T13:40:00Z"
   },
   {
     id: "4",
@@ -290,8 +297,11 @@ export const sampleRouteContent: RouteContent[] = [
       "https://example.com/paris-food-tour.jpg"
     ],
     websiteURL: [],
-    additionalInfo: "Includes tastings at 5 different locations."
+    additionalInfo: "Includes tastings at 5 different locations.",
+    status: "Pending",
+    creationDate: "2025-04-29T13:30:00Z"
   },
+  
   {
     id: "5",
     contentName: "Traditional music of Andalusia",
@@ -323,7 +333,9 @@ export const sampleRouteContent: RouteContent[] = [
     websiteURL: [
       "https://example.com/andalusian-music"
     ],
-    additionalInfo: "Evening performance included in tour price."
+    additionalInfo: "Evening performance included in tour price.",
+    status: "Pending",
+    creationDate: "2025-04-29T13:20:00Z"
   },
   {
     id: "6",
@@ -352,7 +364,9 @@ export const sampleRouteContent: RouteContent[] = [
     ],
     multimediaContent: [],
     websiteURL: [],
-    additionalInfo: "Pre-booking required for Alhambra entrance."
+    additionalInfo: "Pre-booking required for Alhambra entrance.",
+    status: "Pending",
+    creationDate: "2025-04-29T13:10:00Z"
   },
   {
     id: "7",
@@ -385,8 +399,11 @@ export const sampleRouteContent: RouteContent[] = [
     websiteURL: [
       "https://example.com/ottoman-history"
     ],
-    additionalInfo: "Expert guide with Ottoman history specialization."
+    additionalInfo: "Expert guide with Ottoman history specialization.",
+    status: "Pending",
+    creationDate: "2025-04-29T13:00:00Z"
   },
+  
   {
     id: "8",
     contentName: "Renaissance art exploration in Florence",
@@ -414,7 +431,9 @@ export const sampleRouteContent: RouteContent[] = [
     ],
     multimediaContent: [],
     websiteURL: [],
-    additionalInfo: "Priority access tickets included."
+    additionalInfo: "Priority access tickets included.",
+    status: "Pending",
+    creationDate: "2025-04-29T12:50:00Z"
   },
   {
     id: "9",
@@ -445,7 +464,9 @@ export const sampleRouteContent: RouteContent[] = [
       "https://example.com/greek-mythology-tour.jpg"
     ],
     websiteURL: [],
-    additionalInfo: "Family-friendly tour with interactive storytelling."
+    additionalInfo: "Family-friendly tour with interactive storytelling.",
+    status: "Pending",
+    creationDate: "2025-04-29T12:40:00Z"
   },
   {
     id: "10",
@@ -476,7 +497,9 @@ export const sampleRouteContent: RouteContent[] = [
     websiteURL: [
       "https://example.com/viking-history"
     ],
-    additionalInfo: "Optional boat tour weather permitting."
+    additionalInfo: "Optional boat tour weather permitting.",
+    status: "Pending",
+    creationDate: "2025-04-29T12:30:00Z"
   },
   {
     id: "11",
@@ -515,6 +538,8 @@ export const sampleRouteContent: RouteContent[] = [
     websiteURL: [
       "https://example.com/rotterdam-architecture"
     ],
-    additionalInfo: "Includes interior visit to a Cube House."
-  }
+    additionalInfo: "Includes interior visit to a Cube House.",
+    status: "Pending",
+    creationDate: "2025-04-29T12:20:00Z"
+  }  
 ] 

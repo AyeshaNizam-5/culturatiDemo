@@ -27,10 +27,7 @@ export const levels = [
 ]
 
 export const contentTypes = [
-  { value: "informational", label: "Informational" },
-  { value: "quiz", label: "Quiz" },
-  { value: "interactive", label: "Interactive" },
-  { value: "storytelling", label: "Storytelling" },
+
 ]
 
 export const languages = [
