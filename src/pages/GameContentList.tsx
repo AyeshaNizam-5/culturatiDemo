@@ -505,13 +505,7 @@ export default function GameContentList() {
             >
               <Upload size={16} /> Export to Excel
             </Button>
-            <Button 
-              className="flex items-center gap-2" 
-              onClick={() => navigate('/dashboard/content-creator/Game')}
-              size="sm"
-            >
-              <Plus size={16} /> Add New
-            </Button>
+            
           </div>
         </div>
         <p className="text-muted-foreground">
