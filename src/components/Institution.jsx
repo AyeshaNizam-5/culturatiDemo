@@ -9,7 +9,7 @@ const Institution = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   if (!institution) return <p>Loading...</p>;
-
+  console.log("Institution data:", institution);  
   const handleUpdate = async (formData) => {
     try {
       await institutionService.update(institution.id, formData);

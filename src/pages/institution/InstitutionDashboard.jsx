@@ -32,7 +32,7 @@ const InstitutionDashboard = () => {
       const response = await institutionService.getById(institutionId);
       console.log('Institution data:', response.data);  
       if (response) {
-        setInstitution(response.data);
+        (response.data);
       }
     } catch (error) {
       console.error('Error fetching institution:', error);

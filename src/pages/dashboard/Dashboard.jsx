@@ -47,7 +47,7 @@ const Dashboard = () => {
           <EditorDashboard />
         </Suspense>
       );
-      case 'data_entry_operator':
+      case 'data_entry':
       return (
         <Suspense fallback={<div>Loading Dashboard...</div>}>
           <DataEntryDashboard />

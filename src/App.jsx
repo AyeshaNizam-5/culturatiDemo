@@ -95,7 +95,7 @@ const App = () => {
           <Route
             path="/dashboard/data-entry-operator"
             element={
-              <ProtectedRoute allowedRoles={['data_entry_operator']}>
+              <ProtectedRoute allowedRoles={['data_entry']}>
                 <Dashboard />
               </ProtectedRoute>
             }

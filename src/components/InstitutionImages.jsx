@@ -24,7 +24,7 @@ const InstitutionImages = ({ isExpanded, onExpand }) => {
 
   return (
     <div
-      className={`w-full border rounded-md p-4 bg-white shadow-md cursor-pointer transition-all duration-300 ${isExpanded ? 'h-[500px]' : 'h-40'} overflow-hidden`}
+      className={`w-full border rounded-md p-4 bg-white shadow-md cursor-pointer transition-all duration-300 ${isExpanded ? 'h-[500px]' : 'h-64'} overflow-hidden`}
       onClick={(e) => {
         const tag = e.target.tagName.toLowerCase();
         if (tag !== 'button' && tag !== 'svg' && tag !== 'path' && tag !== 'input' && tag !== 'label') {
@@ -45,7 +45,7 @@ const InstitutionImages = ({ isExpanded, onExpand }) => {
 
       <div className="mt-2 grid grid-cols-4 gap-2 overflow-y-auto max-h-72">
         {images.map((img, i) => (
-          <div key={i} className="relative group w-full h-24">
+          <div key={i} className="relative group w-full h-48">
             <img
               src={img}
               alt={`institution-${i}`}
