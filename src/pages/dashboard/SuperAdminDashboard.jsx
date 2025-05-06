@@ -1,11 +1,7 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
-
-import { 
-  Building2, 
-  Settings 
-} from 'lucide-react';
+import { Building2, Settings } from 'lucide-react';
 
 import AppSidebar from "@/components/app-sidebar";
 import { Separator } from "@/components/ui/separator";
@@ -15,11 +11,9 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-import InstitutionsList from "../institution/InstitutionsList";
-
 const navItems = [
   { path: '/dashboard', label: 'Institutions', icon: Building2 },
-  { path: '/settings', label: 'Settings', icon: Settings },
+  { path: '/dashboard/settings', label: 'Settings', icon: Settings }, // updated path
 ];
 
 const SuperAdminDashboard = () => {
@@ -39,7 +33,8 @@ const SuperAdminDashboard = () => {
         </header>
 
         <div className="p-4">
-          <InstitutionsList />
+          {/* Outlet to render nested routes like SettingsPage */}
+          <Outlet />
         </div>
       </SidebarInset>
     </SidebarProvider>

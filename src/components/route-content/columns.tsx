@@ -39,6 +39,8 @@ export type RouteContent = {
   multimediaContent?: string[]
   websiteURL?: string[]
   additionalInfo?: string
+  status: "Pending" | "Approved" | "Rejected"
+  creationDate: string // ISO format (e.g., "2025-05-07T14:20:00Z")
 }
 
 export const columns: ColumnDef<RouteContent>[] = [

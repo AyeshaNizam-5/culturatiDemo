@@ -1,5 +1,6 @@
 import InstitutionProfileCard from "@/components/InstitutionProfileCard";
 import { useSelector } from "react-redux";
+import { m3, m4 } from '../assets';
 
 
 const AboutInstitution = () => {
@@ -11,8 +12,8 @@ const AboutInstitution = () => {
     type: "Museum",
     address: "123 History Ave, Oldtown",
     about: "One of the oldest and most visited museums in the country.",
-    logo: "https://placehold.co/150x150",
-    image: "https://placehold.co/800x400",
+    logo: m3,
+    image: m4,
     funFacts: [{ text: "Founded in 1901" }, { text: "Over 1 million artifacts" }],
   };
 
