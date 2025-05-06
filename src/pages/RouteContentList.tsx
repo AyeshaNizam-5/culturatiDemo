@@ -54,6 +54,15 @@ export default function RouteContentList() {
   //   }
   // }
 
+  const handleStatusChange = (ids: string[], newStatus: "Pending" | "Approved" | "Rejected") => {
+    const updatedData = data.map(item =>
+      ids.includes(item.id) ? { ...item, status: newStatus } : item
+    )
+    setData(updatedData)
+    toast.success(`Status updated to "${newStatus}" for ${ids.length} item(s)`)
+  }
+  
+
   const handleEdit = (id: string) => {
     navigate(`/dashboard/content-creator/Route/edit/${id}`)
   }
@@ -556,17 +565,19 @@ export default function RouteContentList() {
         ) : */}
         {data.length > 0 ? (
           <DataTable
-            columns={columns}
-            data={data}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-          />
+          columns={columns}
+          data={data}
+          onDelete={handleDelete}
+          onEdit={handleEdit}
+          onStatusChange={handleStatusChange} 
+        />
+        
         ) : (
           <div className="flex flex-col items-center justify-center h-48 bg-muted/10 rounded-lg border border-dashed">
             <p className="text-muted-foreground mb-2">No route content found</p>
             <Button
               variant="outline"
-              onClick={() => navigate('/dashboard/content-creator/Route')}
+              onClick={() => navigate('/dashboard/content-creator')}
               className="flex items-center gap-2"
             >
               <Plus size={16} /> Create your first route content

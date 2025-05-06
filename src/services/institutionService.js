@@ -40,22 +40,22 @@ const institutionService = {
 
   create: async (institutionData) => {
     try {
-      // // Mock create
-      // const newInstitution = {
-      //   id: mockInstitutions.length + 1,
-      //   ...institutionData,
-      //   logo: institutionData.logo || "https://placehold.co/150x150",
-      //   image: institutionData.image || "https://placehold.co/800x400"
-      // };
-      // mockInstitutions.push(newInstitution);
-      // return Promise.resolve({ data: newInstitution });
-      const response = await api.post(`${ENDPOINTS.INSTITUTIONS.CREATE}`, institutionData, 
-        {headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log('Response:', response);
-      return { data: response.data };
+      // Mock create
+      const newInstitution = {
+        id: mockInstitutions.length + 1,
+        ...institutionData,
+        logo: institutionData.logo || "https://placehold.co/150x150",
+        image: institutionData.image || "https://placehold.co/800x400"
+      };
+      mockInstitutions.push(newInstitution);
+      return Promise.resolve({ data: newInstitution });
+      // const response = await api.post(`${ENDPOINTS.INSTITUTIONS.CREATE}`, institutionData, 
+      //   {headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // });
+      // console.log('Response:', response);
+      // return { data: response.data };
     } catch (error) {
       console.error('Error creating institution:', error);
       throw error;
