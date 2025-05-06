@@ -30,7 +30,7 @@ const UserForm = ({ user, onClose, onSubmit }) => {
       password: "",
       confirmPassword: "",
       email: "",
-      role: ""
+      role: "", 
     }
   );
   const [errors, setErrors] = useState({});

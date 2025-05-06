@@ -10,54 +10,57 @@ import ConfirmDialog from '../../components/ConfirmDialog';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import authService from '../../services/authService';
 
-const InstitutionCard = ({ institution, onDelete, onSelect }) => (
-  <div
-    onClick={() => onSelect(institution)}
-    className="bg-[#e5e8ee] rounded-lg overflow-hidden shadow-lg hover:shadow-xl 
-               transition-all transform hover:-translate-y-1 border border-gray-800 cursor-pointer"
-  >
-    <div className="h-35 bg-[#dbdfe8] relative">
-      <img
-        src={institution.image}
-        alt={institution.institutionName}
-        className="w-full h-full object-cover opacity-80"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#93d4e7] to-transparent" />
-    </div>
-
-    <div className="p-6">
-      <div className="flex items-center gap-4 mb-4">
-        <div className="w-16 h-16 bg-[#dfe4f1] rounded-lg overflow-hidden shadow-md border border-gray-800">
-          <img
-            src={institution.logo}
-            alt={`${institution.institutionName} logo`}
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div>
-          <h3 className="text-xl font-semibold text-black">{institution.institutionName}</h3>
-          <p className="text-gray-400 text-sm">{institution.institutionCode}</p>
-        </div>
+const InstitutionCard = ({ institution, onDelete, onSelect }) => {
+  return (
+    <div
+      onClick={() => onSelect(institution)}
+      className="bg-[#e5e8ee] rounded-lg overflow-hidden shadow-lg hover:shadow-xl 
+                transition-all transform hover:-translate-y-1 border border-gray-800 cursor-pointer"
+    >
+      <div className="h-35 bg-[#dbdfe8] relative">
+        <img
+          src={logoImageUrl}
+          alt={institution.institutionName}
+          className="w-full h-full object-cover opacity-80"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#93d4e7] to-transparent" />
       </div>
 
-      <div className="flex items-center justify-between">
-        <span className="px-3 py-1 bg-white text-[#5ec5f1] rounded-full text-sm font-medium">
-          {institution.type}
-        </span>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete(institution);
-          }}
-          className="p-2 hover:bg-[#c49782] rounded-lg transition-colors text-red-400 hover:text-red-300"
-        >
-          <Trash2 size={16} />
-        </button>
+      <div className="p-6">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-16 h-16 bg-[#dfe4f1] rounded-lg overflow-hidden shadow-md border border-gray-800">
+            <img
+              src={institution.logo}
+              alt={`${institution.institutionName} logo`}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold text-black">{institution.institutionName}</h3>
+            <p className="text-gray-400 text-sm">{institution.institutionCode}</p>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <span className="px-3 py-1 bg-white text-[#5ec5f1] rounded-full text-sm font-medium">
+            {institution.type}
+          </span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(institution);
+            }}
+            className="p-2 hover:bg-[#c49782] rounded-lg transition-colors text-red-400 hover:text-red-300"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const InstitutionsList = () => {
   const navigate = useNavigate();
@@ -94,8 +97,22 @@ const InstitutionsList = () => {
     }
   };
 
-  const handleSelectInstitution = (institution) => {
-    navigate(`/institution/${institution.id}/institution`);
+  const handleSelectInstitution = async (institution) => {
+    try {
+      console.log('Selected Institution:', institution);  
+      const response = await authService.refreshToken(institution.id);
+      console.log('Response:', response.data);
+      if (response) {
+        setSelectedInstitution(response.data);
+        setIsFormOpen(true);
+      } else {
+        setError('Institution not found');
+      }      
+      navigate(`/institution/${institution.id}/institution`); 
+    } catch (error) {
+      setError('Failed to fetch institution details');
+      console.error(error);
+    }
   };
 
   const handleDeleteClick = (institution) => {

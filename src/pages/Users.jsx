@@ -33,6 +33,7 @@ const Users = () => {
       setLoading(true);
       const response = await userService.getAll(institutionId);
       setUsers(response.data);
+      console.log('Users data:', response.data);
     } catch (err) {
       setError('Failed to fetch users');
       console.error(err);
@@ -144,7 +145,7 @@ const Users = () => {
             {paginatedUsers.map((user) => (
               <tr key={user.id} className="hover:bg-[#f9fafa] transition-colors">
                 <td className="px-6 py-4 whitespace-nowrap text-[#0b6085]">
-                  {user.firstName} {user.lastName}
+                  {user.name}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-[#0b6085]">{user.username}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-[#0b6085]">{user.email}</td>

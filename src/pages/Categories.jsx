@@ -4,15 +4,12 @@ import CategoryForm from '../components/CreateCategoryForm';
 import Pagination from '../components/Pagination';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useParams, useOutletContext } from 'react-router-dom';
+import categoryService from '../services/categoryService';
 // import categoryService from '../services/categoryService';
 
 
 const Categories = () => {
-  const [categories, setCategories] = useState([
-    { id: 1, name: 'Art', description: 'All about art' },
-    { id: 2, name: 'History', description: 'Historical events and figures' },
-    { id: 3, name: 'Science', description: 'Scientific discoveries and facts' }
-  ]);
+  const [categories, setCategories] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [search, setSearch] = useState('');
@@ -30,7 +27,8 @@ const Categories = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await categoryService.getAll(institutionId);
+      const response = await categoryService.getAll();
+      console.log('Categories data:', response);
       setCategories(response.data);
     } catch (err) {
       console.error('Failed to fetch categories:', err);
@@ -88,6 +86,11 @@ const Categories = () => {
       console.error('Error saving category:', err);
     }
   };
+
+  useEffect(() => {
+    fetchCategories();
+  }
+  , [institutionId]);
 
   return (
     <div className="space-y-6">

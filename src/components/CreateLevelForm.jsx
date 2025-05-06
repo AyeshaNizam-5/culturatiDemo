@@ -4,8 +4,7 @@ import { X } from "lucide-react";
 const CreateLevelForm = ({ level, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     name: "",
-    description: "",
-    image: null,
+    description: ""
   });
   const [errors, setErrors] = useState({});
 
@@ -83,14 +82,14 @@ const CreateLevelForm = ({ level, onClose, onSubmit }) => {
             )}
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-[#6193a9] mb-1">Upload Image</label>
             <input
               type="file"
               className="w-full bg-[#eff8fb] p-2 rounded-lg text-[#0b6085] "
               onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
             />
-          </div>
+          </div> */}
 
           <div className="flex justify-end gap-4 mt-6">
             <button

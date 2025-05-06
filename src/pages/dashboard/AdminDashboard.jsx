@@ -35,12 +35,12 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchAssignedInstitution = async () => {
       try {
-        const response = await institutionService.getAll();
-        const userInstitution = response.data.find(inst => inst.id === user.institutionId);
+        const response = await institutionService.getById();
+        console.log('Assigned institution data:', response.data); // Debugging line 
 
-        if (userInstitution) {
-          setAssignedInstitution(userInstitution);
-          navigate(`/institution/${userInstitution.id}/institution`);
+        if (response) {
+          setAssignedInstitution(response.data);
+          navigate(`/institution/${response.data.id}/institution`);
         }
       } catch (error) {
         console.error('Error fetching assigned institution:', error);

@@ -4,15 +4,11 @@ import LevelForm from '../components/CreateLevelForm';
 import Pagination from '../components/Pagination';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useParams, useOutletContext } from 'react-router-dom';
-// import levelService from '../services/levelService';
+import levelService from '../services/levelService';
 
 
 const Levels = () => {
-  const [levels, setLevels] = useState([
-    { id: 1, name: 'Beginner', description: 'For new learners' },
-    { id: 2, name: 'Intermediate', description: 'For experienced learners' },
-    { id: 3, name: 'Expert', description: 'For advanced learners' }
-  ]);
+  const [levels, setLevels] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [search, setSearch] = useState('');
@@ -82,6 +78,7 @@ const Levels = () => {
   const handleSubmit = async (formData) => {
     try {
       if (selectedLevel) {
+        console.log('Updating level:', selectedLevel.id, formData);
         await levelService.update(selectedLevel.id, formData, institutionId);
       } else {
         await levelService.create(formData, institutionId);
@@ -101,6 +98,11 @@ const Levels = () => {
       console.error('Failed to fetch levels:', err);
     }
   };
+
+  useEffect(() => {
+    fetchLevels();
+  }
+, []);
 
   return (
     <div className="space-y-6">

@@ -29,10 +29,10 @@ const InstitutionDashboard = () => {
 
   const fetchInstitution = async () => {
     try {
-      const response = await institutionService.getAll();
-      const found = response.data.find(inst => inst.id === parseInt(institutionId));
-      if (found) {
-        setInstitution(found);
+      const response = await institutionService.getById(institutionId);
+      console.log('Institution data:', response.data);  
+      if (response) {
+        setInstitution(response.data);
       }
     } catch (error) {
       console.error('Error fetching institution:', error);
