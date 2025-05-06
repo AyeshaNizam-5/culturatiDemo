@@ -55,7 +55,7 @@ const InstitutionProfileCard = ({ institution, onSubmit, editable = true }) => {
         <p className="font-semibold text-[#0b6085] mb-1">Fun Facts:</p>
         <ul className="list-disc list-inside text-[#6193a9]">
           {institution.funFacts?.map((fact, idx) => (
-            <li key={idx}>{fact}</li>
+            <li key={idx}>{fact.text}</li>
           ))}
         </ul>
       </div>

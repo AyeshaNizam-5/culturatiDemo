@@ -11,6 +11,7 @@ import ConfirmDialog from '../../components/ConfirmDialog';
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import authService from '../../services/authService';
+import { culturatiLogo } from '../../assets';
 
 const InstitutionCard = ({ institution, onDelete, onSelect }) => {
   return (
@@ -21,7 +22,7 @@ const InstitutionCard = ({ institution, onDelete, onSelect }) => {
     >
       <div className="h-35 bg-[#dbdfe8] relative">
         <img
-          src={logoImageUrl}
+          src={culturatiLogo}
           alt={institution.institutionName}
           className="w-full h-full object-cover opacity-80"
         />

@@ -45,10 +45,10 @@ const DataEntryDashboard = () => {
   useEffect(() => {
     const fetchInstitution = async () => {
       try {
-        const response = await institutionService.getAll();
-        const found = response.data.find(inst => inst.id === user.institutionId);
-        if (found) {
-          setInstitution(found);
+        const response = await institutionService.getById();
+        console.log('Institution data:', response.data); // Debugging line
+        if (response) {
+          setInstitution(response.data);
         }
       } catch (error) {
         console.error('Error fetching institution:', error);
