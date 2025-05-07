@@ -135,7 +135,12 @@ export function DataTable<TData, TValue>({
       globalFilter: searchQuery,
       pagination,
     },
+    meta: {
+      onEdit,
+      onDelete,
+    },
   })
+  
 
   const handleGlobalFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value)

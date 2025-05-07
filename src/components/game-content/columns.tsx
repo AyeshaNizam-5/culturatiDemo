@@ -24,7 +24,7 @@ export type GameContent = {
   author: string
   lastEditor: string
   status: "Pending" | "Approved" | "Rejected"
-  creationDate: string // ISO format
+  creationDate: string 
 }
 
 export interface GameContentActionHandlers {
