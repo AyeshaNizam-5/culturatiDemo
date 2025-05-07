@@ -44,7 +44,7 @@ const LoginForm = (props) => {
                 case 'editor':
                     navigate('/dashboard/editor');
                     break;
-                case 'data_entry_operator':
+                case 'data_entry':
                       navigate('/dashboard/data-entry-operator');
                       break;
                 default:

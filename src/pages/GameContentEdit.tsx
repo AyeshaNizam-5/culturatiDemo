@@ -9,6 +9,7 @@ import { toast } from "sonner"
 import { ArrowLeft, Loader2, Plus, Trash2 } from "lucide-react"
 // import axios from "axios"
 // import { API_BASE_URL } from "@/config/apiConfig"
+import { useSelector } from "react-redux";
 
 import { Button } from "@/components/ui/button"
 import {
@@ -64,12 +65,18 @@ export default function GameContentEdit() {
   const [gameContentData, setGameContentData] = useState<any>(null)
   const { id } = useParams()
   const navigate = useNavigate()
+  const { user } = useSelector((state) => state.auth);
+  const rolePath = user?.role === "editor" ? "editor" : "content-creator";
   
   // Create dynamic options that include both the standard options and any custom values from the data
   const [dynamicRelatedItems, setDynamicRelatedItems] = useState(relatedItems)
   const [dynamicCategories, setDynamicCategories] = useState(categories)
   const [dynamicLevels, setDynamicLevels] = useState(levels)
   const [dynamicGameTypes, setDynamicGameTypes] = useState(contentTypes)
+
+  const handleEdit = (id: string) => {
+    navigate(`/dashboard/${rolePath}/Game/edit/${id}`);
+  };
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),

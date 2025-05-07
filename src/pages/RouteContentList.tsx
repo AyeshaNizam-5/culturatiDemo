@@ -8,6 +8,7 @@ import ExcelJS from 'exceljs'
 import { saveAs } from 'file-saver'
 // import axios from "axios"
 // import { API_BASE_URL } from "@/config/apiConfig"
+import { useSelector } from "react-redux";
 
 import { Button } from "@/components/ui/button"
 import { columns } from "@/components/route-content/columns"
@@ -23,6 +24,9 @@ export default function RouteContentList() {
   // const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const { user } = useSelector((state) => state.auth);
+  const rolePath = user?.role === "editor" ? "editor" : "content-creator";
   
   // Import dialog state
   const [importDialogOpen, setImportDialogOpen] = useState(false)
@@ -64,7 +68,7 @@ export default function RouteContentList() {
   
 
   const handleEdit = (id: string) => {
-    navigate(`/dashboard/content-creator/Route/edit/${id}`)
+    navigate(`/dashboard/${rolePath}/Route/edit/${id}`);
   }
 
   const handleDelete = (ids: string[]) => {

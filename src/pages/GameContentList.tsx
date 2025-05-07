@@ -8,6 +8,7 @@ import ExcelJS from 'exceljs'
 import { saveAs } from 'file-saver'
 // import axios from "axios"
 // import { API_BASE_URL } from "@/config/apiConfig"
+import { useSelector } from "react-redux";
 
 import { Button } from "@/components/ui/button"
 import { columns } from "@/components/game-content/columns"
@@ -23,7 +24,10 @@ export default function GameContentList() {
   // const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
-  
+
+  const { user } = useSelector((state) => state.auth);
+  const rolePath = user?.role === "editor" ? "editor" : "content-creator";
+
   // Import dialog state
   const [importDialogOpen, setImportDialogOpen] = useState(false)
   const [importData, setImportData] = useState<any[]>([])
@@ -63,10 +67,6 @@ export default function GameContentList() {
   }
   
 
-  const handleEdit = (id: string) => {
-    navigate(`/dashboard/content-creator/Game/edit/${id}`)
-  }
-
   const handleDelete = (ids: string[]) => {
     if (window.confirm(`Are you sure you want to delete ${ids.length} items?`)) {
       // API Integration (uncomment when connecting to backend)
@@ -77,6 +77,10 @@ export default function GameContentList() {
       toast.success(`${ids.length} items deleted successfully`)
     }
   }
+
+  const handleEdit = (id: string) => {
+    navigate(`/dashboard/${rolePath}/Game/edit/${id}`);
+  };
   
   // const deleteGameContent = async (ids: string[]) => {
   //   try {
@@ -536,12 +540,17 @@ export default function GameContentList() {
         ) : */}
         {data.length > 0 ? (
           <DataTable
-            columns={columns}
-            data={data}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            onStatusChange={handleStatusChange} 
-          />        
+          columns={columns}
+          data={data}
+          onDelete={handleDelete}
+          onEdit={handleEdit}
+          onStatusChange={handleStatusChange}
+          meta={{
+            onEdit: handleEdit,
+            onDelete: handleDelete
+          }}
+        />
+               
         ) : (
           <div className="flex flex-col items-center justify-center h-48 bg-muted/10 rounded-lg border border-dashed">
             <p className="text-muted-foreground mb-2">No game content found</p>

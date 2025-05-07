@@ -30,7 +30,8 @@ const EditorDashboard = () => {
   const [institution, setInstitution] = useState(null);
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();
-  const isMainPage = location.pathname === "/dashboard/editor";
+  const isMainPage = location.pathname === `/dashboard/${user.role}`;
+
 
   useEffect(() => {
     const fetchInstitution = async () => {
@@ -64,16 +65,15 @@ const EditorDashboard = () => {
           )}
         </header>
 
-        {isMainPage && (
-          <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-            <Toaster />
-            <EditorContentList /> {/* ✅ Renders the new list component */}
-          </div>
-        )}
-
-        <div className="p-4">
-          <Outlet />
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+          <Toaster />
+          {isMainPage ? (
+            <EditorContentList />
+          ) : (
+            <Outlet />
+          )}
         </div>
+
       </SidebarInset>
     </SidebarProvider>
   );
