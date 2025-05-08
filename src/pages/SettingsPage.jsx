@@ -23,7 +23,7 @@ const SettingsPage = () => {
 
   const [editField, setEditField] = useState(null)
   const [formValues, setFormValues] = useState({
-    fullName: `${user.firstName || ""} ${user.lastName || ""}`,
+    fullName: `${user.fullName}` || "",
     email: user.email,
     username: user.username,
     phone: user.phone || "",

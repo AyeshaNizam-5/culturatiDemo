@@ -17,6 +17,7 @@ export const ENDPOINTS = {
     UPDATE: (id) => `/institutions/${id}`,
     DELETE: (id) => `/institutions/${id}`,
     TYPES: '/institutions/types',
+    CREATE_TENANT_INSTITUTION_DETAILS: '/tenant/institution-details',
   },
   USERS: {
     BASE: '/users',

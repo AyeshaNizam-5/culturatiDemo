@@ -1,13 +1,13 @@
 "use client"
 
-import { useState,  useRef } from "react"
+import { useState,  useRef, useEffect } from "react"
 import { Download, Plus, Upload } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import ExcelJS from 'exceljs'
 import { saveAs } from 'file-saver'
-// import axios from "axios"
-// import { API_BASE_URL } from "@/config/apiConfig"
+import axios from "axios"
+import { API_BASE_URL } from "@/config/apiConfig"
 
 import { Button } from "@/components/ui/button"
 import { columns } from "@/components/game-content/columns"
@@ -16,11 +16,12 @@ import { sampleGameContent } from "@/lib/sample-data"
 import { ImportAction } from "@/components/ui/import-dialog"
 import { GameImportDialog } from "@/components/ui/game-import-dialog"
 import { ErrorDialog } from "@/components/ui/error-dialog"
+import api from "../services/api"
 
 export default function GameContentList() {
-  const [data, setData] = useState(sampleGameContent)
-  // const [isLoading, setIsLoading] = useState(false)
-  // const [error, setError] = useState<string | null>(null)
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
   
@@ -35,24 +36,25 @@ export default function GameContentList() {
   const [errorType, setErrorType] = useState('')
   const [errorDetails, setErrorDetails] = useState('')
 
-  // useEffect(() => {
-  //   fetchGameContent()
-  // }, [])
+  useEffect(() => {
+     fetchGameContent()
+  }, [])
   
-  // const fetchGameContent = async () => {
-  //   try {
-  //     setIsLoading(true)
-  //     setError(null)
-  //     const response = await axios.get(`${API_BASE_URL}/game-content`)
-  //     setData(response.data)
-  //   } catch (error) {
-  //     console.error('Error fetching game content:', error)
-  //     setError('Failed to load game content. Please try again later.')
-  //     toast.error('Failed to load game content')
-  //   } finally {
-  //     setIsLoading(false)
-  //   }
-  // }
+  const fetchGameContent = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      const response = await api.get(`${API_BASE_URL}/tenant/game-content`);
+      console.log('Fetched game content:', response.data)
+      setData(response.data)
+    } catch (error) {
+      console.error('Error fetching game content:', error)
+      setError('Failed to load game content. Please try again later.')
+      toast.error('Failed to load game content')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleEdit = (id: string) => {
     navigate(`/dashboard/content-creator/Game/edit/${id}`)

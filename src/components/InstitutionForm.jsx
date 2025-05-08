@@ -34,9 +34,10 @@ const FormSchema = z.object({
   type: z.string().min(1, "Institution Type is required"),
   address: z.string().optional(),
   about: z.string().optional(),
-  logo: z.any().optional(),
-  image: z.any().optional(),
-  funFacts: z.array(z.object({ text: z.string().min(0) })).optional(),
+  logoImage: z.any().optional(),
+  coverImage: z.any().optional(),
+  funFacts: z.array(z.object({ text: z.string().min(1, "Fun fact cannot be empty") }))
+  .optional()
 })
 
 const InstitutionForm = ({ institution, onClose, onSubmit }) => {
@@ -50,9 +51,9 @@ const InstitutionForm = ({ institution, onClose, onSubmit }) => {
       type: institution?.institutionType || "",
       address: institution?.address || "",
       about: institution?.about || "",
-      logo: null,
-      image: null,
-      funFacts: institution?.funFacts || [{ text: "" }],
+      logoImage: null,
+      coverImage: null,
+      funFacts: institution?.funFacts?.map(f => ({ text: f })) || [{ text: "" }],
     },
   })
 
@@ -64,8 +65,9 @@ const InstitutionForm = ({ institution, onClose, onSubmit }) => {
   const handleSubmit = async (values) => {
     const payload = {
       ...values,
-      logo: form.watch("logo"),
-      image: form.watch("image"),
+      logoImage: form.watch("logoImage"),
+      coverImage: form.watch("coverImage"),
+      funFacts: values.funFacts?.map(f => f.text) || [],
     }
 
     onSubmit(payload)
@@ -202,7 +204,7 @@ const InstitutionForm = ({ institution, onClose, onSubmit }) => {
 
             <FormField
               control={form.control}
-              name="logo"
+              name="logoImage"
               render={({ field: { onChange } }) => (
                 <FormItem>
                   <FormLabel>Logo (optional)</FormLabel>
@@ -219,7 +221,7 @@ const InstitutionForm = ({ institution, onClose, onSubmit }) => {
 
             <FormField
               control={form.control}
-              name="image"
+              name="coverImage"
               render={({ field: { onChange } }) => (
                 <FormItem>
                   <FormLabel>Cover Image (optional)</FormLabel>

@@ -4,18 +4,20 @@ import React, { useState } from "react";
 import { Pencil } from "lucide-react";
 import InstitutionForm from "./InstitutionForm";
 import { Button } from "@/components/ui/button";
+import { API_BASE_URL } from "../config/apiConfig";
 
 const InstitutionProfileCard = ({ institution, onSubmit, editable = true }) => {
   const [isEditing, setIsEditing] = useState(false);
   if (!institution) return null;
-
-  console.log("InstitutionProfileCard", institution);
 
   const handleUpdate = (data) => {
     onSubmit(data);
     setIsEditing(false);
   };
 
+  const logoImageUrl = `${API_BASE_URL}/images/${institution.logoImageId}`
+  const coverImageUrl = `${API_BASE_URL}/images/${institution.coverImageId}`;
+  
   return (
     <div className="bg-white rounded-xl p-6 shadow-sm border border-[#cde4ed]">
       <div className="flex justify-between items-center mb-6">
@@ -55,30 +57,22 @@ const InstitutionProfileCard = ({ institution, onSubmit, editable = true }) => {
         <p className="font-semibold text-[#0b6085] mb-1">Fun Facts:</p>
         <ul className="list-disc list-inside text-[#6193a9]">
           {institution.funFacts?.map((fact, idx) => (
-            <li key={idx}>{fact.text}</li>
+            <li key={idx}>{fact}</li>
           ))}
         </ul>
       </div>
 
       <div className="flex gap-6 mt-4 flex-wrap">
-        {institution.logo && (
+        {institution.logoImageId && (
           <img
-            src={
-              typeof institution.logo === "string"
-                ? institution.logo
-                : URL.createObjectURL(institution.logo)
-            }
+            src={logoImageUrl}
             alt="Logo"
             className="w-24 h-24 object-cover rounded-lg border"
           />
         )}
-        {institution.image && (
+        {institution.coverImageId && (
           <img
-            src={
-              typeof institution.image === "string"
-                ? institution.image
-                : URL.createObjectURL(institution.image)
-            }
+            src={coverImageUrl}
             alt="Cover"
             className="w-64 h-32 object-cover rounded-lg border"
           />

@@ -7,16 +7,41 @@ import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { sampleGameContent, sampleRouteContent } from "@/lib/sample-data";
+import { API_BASE_URL } from "@/config/apiConfig"
+import api from "@/services/api"
+
 
 const EditorContentList = () => {
   const [contentList, setContentList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [filterType, setFilterType] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
   const navigate = useNavigate();
+  const [gameContent, setGameContent] = useState([])
 
   useEffect(() => {
-    const normalizeGame = sampleGameContent.map((item) => ({
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await api.get(`${API_BASE_URL}/tenant/game-content`);
+        setGameContent(response.data);
+      } catch (error) {
+        setError("Failed to fetch game content");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  console.log("gameContent", gameContent)
+
+
+  useEffect(() => {
+    const normalizeGame = gameContent.map((item) => ({
       id: `game-${item.id}`,
       type: "game",
       contentName: item.question,
@@ -29,6 +54,7 @@ const EditorContentList = () => {
       status: item.status || "pending"
     }));
 
+    console.log("normalizeGame", normalizeGame)
     const normalizeRoute = sampleRouteContent.map((item) => ({
       id: `route-${item.id}`,
       type: "route",
@@ -44,6 +70,8 @@ const EditorContentList = () => {
 
     setContentList([...normalizeGame, ...normalizeRoute]);
   }, []);
+
+  console.log("gameContent", gameContent) 
 
   const filteredContent = contentList.filter((item) => {
     const matchesSearch =

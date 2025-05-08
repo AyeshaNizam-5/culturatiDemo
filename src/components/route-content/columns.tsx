@@ -1,6 +1,6 @@
 "use client"
 
-import { ColumnDef, FilterFn } from "@tanstack/react-table"
+import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal, Pencil, Trash } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -21,7 +21,8 @@ export interface RouteContentActionHandlers {
 
 export type RouteContent = {
   id: string
-  contentName: string
+  question: string
+  answer: string
   language: string
   category: string
   level: string
@@ -29,18 +30,15 @@ export type RouteContent = {
   relatedItem: string
   author: string
   lastEditor: string
-  description?: string
-  routePoints?: {
-    name: string
-    latitude: string
-    longitude: string
-    description?: string
-  }[]
+  isApproved: "True" | "False"
+  createdAt: string // ISO format (e.g., "2025-05-07T14:20:00Z")
+  updatedAt: string // ISO format
   multimediaContent?: string[]
-  websiteURL?: string[]
+  websiteUrl?: string
+  multipleChoiceOptions?: string[]
+  pointValue?: number
+  clue?: string
   additionalInfo?: string
-  status: "Pending" | "Approved" | "Rejected"
-  creationDate: string // ISO format (e.g., "2025-05-07T14:20:00Z")
 }
 
 export const columns: ColumnDef<RouteContent>[] = [
@@ -67,132 +65,116 @@ export const columns: ColumnDef<RouteContent>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "contentName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Content Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className="line-clamp-1">{row.getValue("contentName")}</div>,
+    accessorKey: "question",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Question
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => <div className="line-clamp-1">{row.getValue("question")}</div>,
   },
   {
     accessorKey: "language",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Language
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Language
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div>{row.getValue("language")}</div>,
-    filterFn: "caseInsensitive" as any,
+    filterFn: "equalsString" as any,
   },
   {
     accessorKey: "category",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Category
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Category
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div>{row.getValue("category")}</div>,
-    filterFn: "caseInsensitive" as any,
+    filterFn: "equalsString" as any,
   },
   {
     accessorKey: "level",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Level
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Level
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div>{row.getValue("level")}</div>,
-    filterFn: "caseInsensitive" as any,
+    filterFn: "equalsString" as any,
   },
   {
     accessorKey: "type",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Game Type
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Game Type
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div>{row.getValue("type")}</div>,
-    filterFn: "caseInsensitive" as any,
+    filterFn: "equalsString" as any,
   },
   {
     accessorKey: "relatedItem",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Item
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Related Item
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div>{row.getValue("relatedItem")}</div>,
-    filterFn: "caseInsensitive" as any,
+    filterFn: "equalsString" as any,
   },
   {
     accessorKey: "author",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Author
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Author
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div>{row.getValue("author")}</div>,
   },
   {
     accessorKey: "lastEditor",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Last Editor
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Last Editor
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div>{row.getValue("lastEditor")}</div>,
   },
   {
-    accessorKey: "status",
+    accessorKey: "isApproved",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -203,27 +185,25 @@ export const columns: ColumnDef<RouteContent>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const status = row.getValue("status") as string
+      const isApproved = row.getValue("isApproved") as string
       return (
         <span
           className={`px-2 py-1 rounded text-sm font-medium ${
-            status === "Approved"
+            isApproved === "True"
               ? "text-green-600 bg-green-100"
-              : status === "Rejected"
+              : isApproved === "False"
               ? "text-red-600 bg-red-100"
               : "text-yellow-600 bg-yellow-100"
           }`}
         >
-          {status}
+          {isApproved}
         </span>
       )
     },
-    filterFn: "caseInsensitive" as any,
+    filterFn: "equalsString" as any,
   },
-  
-  
   {
-    accessorKey: "creationDate",
+    accessorKey: "createdAt",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -234,19 +214,16 @@ export const columns: ColumnDef<RouteContent>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const rawDate = row.getValue("creationDate") as string
-      const formatted = new Date(rawDate).toLocaleDateString()
-      return <span>{formatted}</span>
+      const rawDate = row.getValue("createdAt") as string
+      const date = new Date(rawDate)
+      return <span>{date.toLocaleDateString()}</span>
     },
     sortingFn: "datetime",
-  },  
-  
+  },
   {
     id: "actions",
     cell: ({ row, table }) => {
       const routeContent = row.original
-      
-      // Get access to the edit/delete handlers from the table meta
       const { onEdit, onDelete } = table.options.meta as RouteContentActionHandlers || {}
 
       return (
@@ -294,4 +271,4 @@ export const columns: ColumnDef<RouteContent>[] = [
       )
     },
   },
-] 
+]

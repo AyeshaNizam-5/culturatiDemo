@@ -12,8 +12,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import authService from '../../services/authService';
 import { culturatiLogo } from '../../assets';
+import { API_BASE_URL } from '../../config/apiConfig';
 
 const InstitutionCard = ({ institution, onDelete, onSelect }) => {
+  const logoImageUrl = `${API_BASE_URL}/images/${institution.logoImage}`
+  const coverImageUrl = `${API_BASE_URL}/images/${institution.coverImage}`;
   return (
     <div
       onClick={() => onSelect(institution)}
@@ -22,9 +25,9 @@ const InstitutionCard = ({ institution, onDelete, onSelect }) => {
     >
       <div className="h-35 bg-[#dbdfe8] relative">
         <img
-          src={culturatiLogo}
+          src={coverImageUrl}
           alt={institution.institutionName}
-          className="w-full h-full object-cover opacity-80"
+          className="w-full h-full object-cover "
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#93d4e7] to-transparent" />
       </div>
@@ -33,7 +36,7 @@ const InstitutionCard = ({ institution, onDelete, onSelect }) => {
         <div className="flex items-center gap-4 mb-4">
           <div className="w-16 h-16 bg-[#dfe4f1] rounded-lg overflow-hidden shadow-md border border-gray-800">
             <img
-              src={institution.logo}
+              src={logoImageUrl}
               alt={`${institution.institutionName} logo`}
               className="w-full h-full object-cover"
             />
@@ -144,7 +147,18 @@ const InstitutionsList = () => {
       if (selectedInstitution) {
         await institutionService.update(selectedInstitution.id, formData);
       } else {
-        await institutionService.create(formData);
+        const response = await institutionService.create(formData);
+        console.log('Created Institution:', response.data);
+        const institutionId = response.data.id;
+        const newToken = await authService.refreshToken(institutionId);
+        console.log('New Token:', newToken);
+        const newFormData = {
+          ...formData,
+          logoImageId: response.data.logoImage,
+          coverImageId: response.data.coverImage,
+        }
+        const tenantInstitutionDetails = await institutionService.createTenantInstitutionDetails(newFormData);
+        console.log('Tenant Institution Details:', tenantInstitutionDetails.data);
       }
       fetchInstitutions();
       handleCloseForm();

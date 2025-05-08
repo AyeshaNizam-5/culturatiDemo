@@ -5,8 +5,9 @@ import { z } from "zod"
 import { toast } from "sonner"
 // import { useState, useEffect } from "react"
 // import axios from "axios"
-// import { API_BASE_URL } from "@/config/apiConfig"
-// import { useParams, useNavigate } from "react-router-dom"
+import { API_BASE_URL } from "@/config/apiConfig"
+import api from "@/services/api"
+import { useParams, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -20,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Combobox } from "@/components/ui/combobox";
 import { relatedItems, categories, levels, contentTypes, languages, answerTypes } from "@/lib/data";
+import { useState } from "react"
 // import { useState } from "react";
 // import { CKEditor } from '@ckeditor/ckeditor5-react';
 // import { ClassicEditor, Essentials, Paragraph, Bold, Italic } from 'ckeditor5';
@@ -33,7 +35,7 @@ const FormSchema = z.object({
   choices: z.array(z.object({ text: z.string() })).min(2, "At least 2 choices are required"),
   correctAnswerIndex: z.number().min(0, "Please select a correct answer"),
   clue: z.string().optional(),
-  points: z.number(),
+  points: z.coerce.number().min(1, "Points must be at least 1"),
   category: z.string().nonempty("Please select a category"),
   level: z.string().nonempty("Please select a level"),
   type: z.string().nonempty("Please select a type"),
@@ -58,9 +60,10 @@ const FormSchema = z.object({
 
 const GameForm = () => {
 //   const [editorData, setEditorData] = useState("");
-//   const [isLoading, setIsLoading] = useState(false)
-//   const [isEditMode, setIsEditMode] = useState(false)
-//   const { id } = useParams()
+   const [isLoading, setIsLoading] = useState(false)
+   const [isEditMode, setIsEditMode] = useState(false)
+   const { id } = useParams()
+   const navigate = useNavigate()
 //   const navigate = useNavigate()
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -73,7 +76,7 @@ const GameForm = () => {
       choices: [{ text: "" }, { text: "" }],
       correctAnswerIndex: 0,
       clue: "",
-      points: 1,
+      points: "",
       category: "",
       level: "",
       type: "",
@@ -142,54 +145,54 @@ const GameForm = () => {
     toast("You have created a new game content question!");
 
     // API Integration code (uncomment when connecting to backend)
-    // submitGameContent(values)
+    submitGameContent(values)
   }
 
-  // const submitGameContent = async (values) => {
-  //   try {
-  //     setIsLoading(true)
-  //     
-  //     // Format data for API
-  //     const gameContentData = {
-  //       relatedItem: values.relatedItem,
-  //       language: values.contentLanguage,
-  //       question: values.question,
-  //       answerType: values.answerType,
-  //       choices: values.choices.map(choice => choice.text),
-  //       correctAnswerIndex: values.correctAnswerIndex,
-  //       clue: values.clue,
-  //       points: values.points,
-  //       category: values.category,
-  //       level: values.level,
-  //       gameType: values.type,
-  //       additionalInfo: values.additionalInfo,
-  //       multimediaContent: values.multimediaContent?.filter(item => item.text).map(item => item.text) || [],
-  //       websiteURL: values.websiteURL?.filter(item => item.text).map(item => item.text) || []
-  //     }
-  //     
-  //     // Add author info (from auth state)
-  //     // gameContentData.authorId = user.id
-  //     
-  //     let response
-  //     if (isEditMode) {
-  //       // Update existing content
-  //       response = await axios.put(`${API_BASE_URL}/game-content/${id}`, gameContentData)
-  //       toast.success('Game content updated successfully')
-  //     } else {
-  //       // Create new content
-  //       response = await axios.post(`${API_BASE_URL}/game-content`, gameContentData)
-  //       toast.success('Game content created successfully')
-  //     }
-  //     
-  //     // Redirect to game content list
-  //     navigate('/dashboard/content-creator/Game')
-  //   } catch (error) {
-  //     console.error('Error submitting game content:', error)
-  //     toast.error(isEditMode ? 'Failed to update game content' : 'Failed to create game content')
-  //   } finally {
-  //     setIsLoading(false)
-  //   }
-  // }
+  const submitGameContent = async (values) => {
+    try {
+      setIsEditMode(false)
+      setIsLoading(true)
+      // Format data for API
+      const gameContentData = {
+        relatedItem: values.relatedItem,
+        language: values.contentLanguage,
+        question: values.question,
+        answerType: values.answerType,
+        multipleChoiceOptions: values.choices.map(choice => choice.text),
+        correctAnswerIndex: values.correctAnswerIndex,
+        clue: values.clue,
+        points: values.points,
+        category: values.category,
+        level: values.level,
+        type: values.type,
+        additionalInfo: values.additionalInfo,
+        multimediaContent: values.multimediaContent?.filter(item => item.text).map(item => item.text) || [],
+        websiteURL: values.websiteURL?.filter(item => item.text).map(item => item.text) || []
+      }
+      
+      // Add author info (from auth state)
+      // gameContentData.authorId = user.id
+      
+      let response;
+      if (isEditMode) {
+        // Update existing content
+        response = await api.put(`${API_BASE_URL}/game-content/${id}`, gameContentData)
+        toast.success('Game content updated successfully')
+      } else {
+        // Create new content
+        response = await api.post(`${API_BASE_URL}/tenant/game-content`, gameContentData)
+        toast.success('Game content created successfully')
+      }
+      
+      // Redirect to game content list
+      navigate('/dashboard/content-creator/Game')
+    } catch (error) {
+      console.error('Error submitting game content:', error)
+      toast.error(isEditMode ? 'Failed to update game content' : 'Failed to create game content')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <Form {...form}>
@@ -302,7 +305,7 @@ const GameForm = () => {
 
         
         <FormField control={form.control} name="clue" render={({ field }) => <FormItem><FormLabel>Clue</FormLabel><Input placeholder="Write the clue here" {...field} /></FormItem>} />
-        <FormField control={form.control} name="points" render={({ field }) => <FormItem><FormLabel>Points</FormLabel><Input type="number" placeholder="Enter points" min={1} {...field} /></FormItem>} />
+        <FormField control={form.control} name="points" render={({ field }) => <FormItem><FormLabel>Points</FormLabel><Input type="number" placeholder="Enter points" min={0} {...field} /></FormItem>} />
 
        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

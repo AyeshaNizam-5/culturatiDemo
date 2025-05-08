@@ -22,9 +22,22 @@ const InstitutionImages = ({ isExpanded, onExpand }) => {
     fileInputRef.current?.click();
   };
 
+    // const fetchImages = async () => {
+  //   // Simulate fetching images from an API or local storage
+  //   try {
+  //     const repsonse = await api.get(`${API_BASE_URL}/tenant/images/all`);
+  //     console.log('Images data:', repsonse.data); 
+  //     setImages(repsonse.data.map((img) => `${API_BASE_URL}/tenant/images/${img.id}`));
+
+  //   } catch (error) {
+  //     console.error('Error fetching images:', error);
+  //   }
+  // }
+  // console.log('Images:', images); // Log the images state
+  
   return (
     <div
-      className={`w-full border rounded-md p-4 bg-white shadow-md cursor-pointer transition-all duration-300 ${isExpanded ? 'h-[500px]' : 'h-64'} overflow-hidden`}
+      className={`w-full border rounded-md p-4 bg-white shadow-md cursor-pointer transition-all duration-300 ${isExpanded ? 'h-[500px]' : 'h-40'} overflow-hidden`}
       onClick={(e) => {
         const tag = e.target.tagName.toLowerCase();
         if (tag !== 'button' && tag !== 'svg' && tag !== 'path' && tag !== 'input' && tag !== 'label') {
@@ -45,7 +58,7 @@ const InstitutionImages = ({ isExpanded, onExpand }) => {
 
       <div className="mt-2 grid grid-cols-4 gap-2 overflow-y-auto max-h-72">
         {images.map((img, i) => (
-          <div key={i} className="relative group w-full h-48">
+          <div key={i} className="relative group w-full h-24">
             <img
               src={img}
               alt={`institution-${i}`}

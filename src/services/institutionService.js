@@ -76,6 +76,21 @@ const institutionService = {
     }
   },
 
+  createTenantInstitutionDetails: async (institutionData) => {
+    try {
+      console.log('Tenant Institution Data:', institutionData); 
+      const response = await api.post(`${ENDPOINTS.INSTITUTIONS.CREATE_TENANT_INSTITUTION_DETAILS}`, institutionData);
+      if (response.status === 200) {
+        console.log('Response:', response.data);
+        return { data: response.data };
+      }
+      throw new Error('Failed to create tenant institution details');
+    } catch (error) {
+      console.error('Error creating tenant institution details:', error);
+      throw error;
+    }
+  },
+
   update: async (id, institutionData) => {
     try {
       const index = mockInstitutions.findIndex(inst => inst.id === id);
@@ -95,12 +110,19 @@ const institutionService = {
 
   delete: async (id) => {
     try {
-      const index = mockInstitutions.findIndex(inst => inst.id === id);
-      if (index !== -1) {
-        mockInstitutions.splice(index, 1);
-        return Promise.resolve({ success: true });
+      // const index = mockInstitutions.findIndex(inst => inst.id === id);
+      // if (index !== -1) {
+      //   mockInstitutions.splice(index, 1);
+      //   return Promise.resolve({ success: true });
+      // }
+      // throw new Error('Institution not found');
+      const response = await api.delete(ENDPOINTS.INSTITUTIONS.DELETE(id));
+      if (response) {
+        console.log('Response:', response.data);
+        return { success: true };
       }
-      throw new Error('Institution not found');
+      throw new Error('Failed to delete institution');
+
     } catch (error) {
       console.error('Error deleting institution:', error);
       throw error;

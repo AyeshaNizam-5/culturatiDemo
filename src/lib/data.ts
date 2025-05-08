@@ -27,7 +27,10 @@ export const levels = [
 ]
 
 export const contentTypes = [
-
+  { value: "group", label: "Group" },
+  { value: "family", label: "Family" },
+  { value: "individual", label: "Individual" },
+  
 ]
 
 export const languages = [

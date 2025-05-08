@@ -141,7 +141,7 @@ const authService = {
       username: user,
       institutionId: id,
     });
-    console.log('Response:', refreshToken);
+    console.log('Response Token:', refreshToken);
     localStorage.setItem('token', refreshToken.data);
     return refreshToken.data;
   },

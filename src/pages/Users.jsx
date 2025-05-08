@@ -22,6 +22,8 @@ const Users = () => {
     userName: ''
   });
 
+  console.log('Institution:', institution); // Log the institution object
+
   const itemsPerPage = 8;
 
   useEffect(() => {
