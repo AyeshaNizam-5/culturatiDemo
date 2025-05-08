@@ -1,4 +1,4 @@
-// src/services/authService.js
+
 
 import { ENDPOINTS } from "../config/apiConfig";
 import api from "./api";
@@ -93,42 +93,42 @@ const mockUsers = [
 const authService = {
   login: async (credentials) => {
     try {
-      // const user = mockUsers.find(
-      //   (u) => u.username === credentials.username && u.password === credentials.password
-      // );
+      const user = mockUsers.find(
+        (u) => u.username === credentials.username && u.password === credentials.password
+      );
 
-      // if (user) {
-      //   const token = "mock-jwt-token";
-      //   const normalizedUser = {
-      //     ...user,
-      //     role: user.role.toLowerCase()
-      //   };
-
-      //   localStorage.setItem('token', token);
-      //   localStorage.setItem('user', JSON.stringify(normalizedUser));
-        
-      //   return { user: normalizedUser, token };
-      // }
-
-      const response = await api.post(`${ENDPOINTS.AUTH.LOGIN}`, credentials);
-      console.log('Response:', response);
-
-      if (response.status === 200) {
-        const { accessToken, role, ...user } = response.data; // Extract accessToken, role, and other user details
-        
-        // Normalize role to lowercase
+      if (user) {
+        const token = "mock-jwt-token";
         const normalizedUser = {
           ...user,
-          role: role.toLowerCase()
+          role: user.role.toLowerCase()
         };
-        console.log('Normalized User:', normalizedUser);
-        localStorage.setItem('token', accessToken);
+
+        localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(normalizedUser));
         
-        return { user: normalizedUser, token: accessToken };
+        return { user: normalizedUser, token };
       }
-      // If the response is not 200, handle the error accordingly
-      throw new Error('Invalid credentials');
+
+      // const response = await api.post(`${ENDPOINTS.AUTH.LOGIN}`, credentials);
+      // console.log('Response:', response);
+
+      // if (response.status === 200) {
+      //   const { accessToken, role, ...user } = response.data; // Extract accessToken, role, and other user details
+        
+      //   // Normalize role to lowercase
+      //   const normalizedUser = {
+      //     ...user,
+      //     role: role.toLowerCase()
+      //   };
+      //   console.log('Normalized User:', normalizedUser);
+      //   localStorage.setItem('token', accessToken);
+      //   localStorage.setItem('user', JSON.stringify(normalizedUser));
+        
+      //   return { user: normalizedUser, token: accessToken };
+      // }
+      // // If the response is not 200, handle the error accordingly
+      // throw new Error('Invalid credentials');
     } catch (error) {
       throw error;
     }

@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import ExcelJS from 'exceljs'
 import { saveAs } from 'file-saver'
-import axios from "axios"
-import { API_BASE_URL } from "@/config/apiConfig"
+// import axios from "axios"
+// import { API_BASE_URL } from "@/config/apiConfig"
 
 import { Button } from "@/components/ui/button"
 import { columns } from "@/components/game-content/columns"
@@ -24,7 +24,10 @@ export default function GameContentList() {
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
-  
+
+  const { user } = useSelector((state) => state.auth);
+  const rolePath = user?.role === "editor" ? "editor" : "content-creator";
+
   // Import dialog state
   const [importDialogOpen, setImportDialogOpen] = useState(false)
   const [importData, setImportData] = useState<any[]>([])
@@ -56,9 +59,14 @@ export default function GameContentList() {
     }
   }
 
-  const handleEdit = (id: string) => {
-    navigate(`/dashboard/content-creator/Game/edit/${id}`)
+  const handleStatusChange = (ids: string[], newStatus: "Pending" | "Approved" | "Rejected") => {
+    const updatedData = data.map(item =>
+      ids.includes(item.id) ? { ...item, status: newStatus } : item
+    )
+    setData(updatedData)
+    toast.success(`Status updated to "${newStatus}" for ${ids.length} item(s)`)
   }
+  
 
   const handleDelete = (ids: string[]) => {
     if (window.confirm(`Are you sure you want to delete ${ids.length} items?`)) {
@@ -70,6 +78,10 @@ export default function GameContentList() {
       toast.success(`${ids.length} items deleted successfully`)
     }
   }
+
+  const handleEdit = (id: string) => {
+    navigate(`/dashboard/${rolePath}/Game/edit/${id}`);
+  };
   
   // const deleteGameContent = async (ids: string[]) => {
   //   try {
@@ -529,17 +541,23 @@ export default function GameContentList() {
         ) : */}
         {data.length > 0 ? (
           <DataTable
-            columns={columns}
-            data={data}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-          />
+          columns={columns}
+          data={data}
+          onDelete={handleDelete}
+          onEdit={handleEdit}
+          onStatusChange={handleStatusChange}
+          meta={{
+            onEdit: handleEdit,
+            onDelete: handleDelete
+          }}
+        />
+               
         ) : (
           <div className="flex flex-col items-center justify-center h-48 bg-muted/10 rounded-lg border border-dashed">
             <p className="text-muted-foreground mb-2">No game content found</p>
             <Button
               variant="outline"
-              onClick={() => navigate('/dashboard/content-creator/Game')}
+              onClick={() => navigate('/dashboard/content-creator')}
               className="flex items-center gap-2"
             >
               <Plus size={16} /> Create your first game content

@@ -1,6 +1,6 @@
 "use client"
 
-import { ColumnDef, FilterFn } from "@tanstack/react-table"
+import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal, Pencil, Trash } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -12,7 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useNavigate } from "react-router-dom"
 
 export type GameContent = {
   id: string
@@ -25,9 +24,13 @@ export type GameContent = {
   author: string
   lastEditor: string
   status: "Pending" | "Approved" | "Rejected"
-  creationDate: string // ISO format (e.g., "2025-05-07T14:20:00Z")
+  creationDate: string 
 }
 
+export interface GameContentActionHandlers {
+  onEdit?: (id: string) => void
+  onDelete?: (ids: string[]) => void
+}
 
 export const columns: ColumnDef<GameContent>[] = [
   {
@@ -54,144 +57,99 @@ export const columns: ColumnDef<GameContent>[] = [
   },
   {
     accessorKey: "question",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Question
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        Question
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div className="line-clamp-1">{row.getValue("question")}</div>,
   },
   {
     accessorKey: "language",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Language
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        Language
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div>{row.getValue("language")}</div>,
     filterFn: "caseInsensitive" as any,
   },
   {
     accessorKey: "category",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Category
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        Category
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div>{row.getValue("category")}</div>,
     filterFn: "caseInsensitive" as any,
   },
   {
     accessorKey: "level",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Level
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        Level
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div>{row.getValue("level")}</div>,
     filterFn: "caseInsensitive" as any,
   },
   {
     accessorKey: "gameType",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Game Type
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        Game Type
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div>{row.getValue("gameType")}</div>,
     filterFn: "caseInsensitive" as any,
   },
   {
     accessorKey: "relatedItem",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Item
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        Item
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div>{row.getValue("relatedItem")}</div>,
     filterFn: "caseInsensitive" as any,
   },
   {
     accessorKey: "author",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Author
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        Author
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div>{row.getValue("author")}</div>,
   },
   {
     accessorKey: "lastEditor",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Last Editor
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        Last Editor
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <div>{row.getValue("lastEditor")}</div>,
   },
-
   {
     accessorKey: "status",
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
         Status
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
     cell: ({ row }) => {
       const status = row.getValue("status") as string
-
       return (
         <span
           className={`px-2 py-1 rounded text-sm font-medium ${
@@ -208,14 +166,10 @@ export const columns: ColumnDef<GameContent>[] = [
     },
     filterFn: "caseInsensitive" as any,
   },
-  
   {
     accessorKey: "creationDate",
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
         Created At
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
@@ -223,18 +177,15 @@ export const columns: ColumnDef<GameContent>[] = [
     cell: ({ row }) => {
       const rawDate = row.getValue("creationDate");
       const formatted = new Date(rawDate as string).toLocaleDateString();
-
-      return <span>{formatted}</span>
+      return <span>{formatted}</span>;
     },
     sortingFn: "datetime",
   },
-  
-  
   {
     id: "actions",
-    cell: ({ row }) => {
-      const gameContent = row.original
-      const navigate = useNavigate()
+    cell: ({ row, table }) => {
+      const gameContent = row.original;
+      const { onEdit, onDelete } = table.options.meta as GameContentActionHandlers || {};
 
       return (
         <DropdownMenu>
@@ -246,16 +197,16 @@ export const columns: ColumnDef<GameContent>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem 
-              onClick={() => navigator.clipboard.writeText(gameContent.id)}
-            >
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(gameContent.id)}>
               Copy ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={(e) => {
-                e.stopPropagation()
-                navigate(`/dashboard/content-creator/Game/edit/${gameContent.id}`)
+                e.stopPropagation();
+                if (onEdit) {
+                  onEdit(gameContent.id);
+                }
               }}
               className="flex items-center text-blue-600"
             >
@@ -263,9 +214,11 @@ export const columns: ColumnDef<GameContent>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {
-                e.stopPropagation()
+                e.stopPropagation();
                 if (window.confirm("Are you sure you want to delete this item?")) {
-                  console.log("Delete: ", gameContent.id)
+                  if (onDelete) {
+                    onDelete([gameContent.id]);
+                  }
                 }
               }}
               className="flex items-center text-red-600"
@@ -274,7 +227,7 @@ export const columns: ColumnDef<GameContent>[] = [
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-] 
+];

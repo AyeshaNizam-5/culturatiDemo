@@ -47,6 +47,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   onDelete: (ids: string[]) => void
   onEdit: (id: string) => void
+  onStatusChange?: (ids: string[], newStatus: string) => void
 }
 
 export function DataTable<TData, TValue>({
@@ -54,6 +55,7 @@ export function DataTable<TData, TValue>({
   data,
   onDelete,
   onEdit,
+  onStatusChange,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -153,6 +155,19 @@ export function DataTable<TData, TValue>({
     onDelete(ids)
     setRowSelection({})
   }
+
+  const handleStatusChange = (newStatus: "Pending" | "Approved" | "Rejected") => {
+    const selectedRows = table.getFilteredSelectedRowModel().rows
+    if (selectedRows.length === 0) {
+      toast("No rows selected")
+      return
+    }
+  
+    const ids = selectedRows.map((row) => (row.original as any).id)
+    onStatusChange?.(ids, newStatus)
+    setRowSelection({})
+  }
+  
   
   // Function to update a filter
   const updateFilter = (columnId: string, value: string) => {
@@ -444,6 +459,22 @@ export function DataTable<TData, TValue>({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
+          <Button
+            variant="outline"
+            onClick={() => handleStatusChange("Approved")}
+            disabled={table.getFilteredSelectedRowModel().rows.length === 0}
+          >
+            Approve Selected
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={() => handleStatusChange("Rejected")}
+            disabled={table.getFilteredSelectedRowModel().rows.length === 0}
+          >
+            Reject Selected
+          </Button>
+
           <Button
             variant="destructive"
             onClick={handleDeleteSelected}

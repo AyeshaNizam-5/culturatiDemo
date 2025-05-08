@@ -45,7 +45,6 @@ const LoginForm = (props) => {
                     navigate('/dashboard/editor');
                     break;
                 case 'data_entry':
-                      console.log("Navigating to data entry dashboard");
                       navigate('/dashboard/data-entry-operator');
                       break;
                 default:

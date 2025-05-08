@@ -8,6 +8,7 @@ import ExcelJS from 'exceljs'
 import { saveAs } from 'file-saver'
 // import axios from "axios"
 // import { API_BASE_URL } from "@/config/apiConfig"
+import { useSelector } from "react-redux";
 
 import { Button } from "@/components/ui/button"
 import { columns } from "@/components/route-content/columns"
@@ -23,6 +24,9 @@ export default function RouteContentList() {
   // const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const { user } = useSelector((state) => state.auth);
+  const rolePath = user?.role === "editor" ? "editor" : "content-creator";
   
   // Import dialog state
   const [importDialogOpen, setImportDialogOpen] = useState(false)
@@ -54,8 +58,17 @@ export default function RouteContentList() {
   //   }
   // }
 
+  const handleStatusChange = (ids: string[], newStatus: "Pending" | "Approved" | "Rejected") => {
+    const updatedData = data.map(item =>
+      ids.includes(item.id) ? { ...item, status: newStatus } : item
+    )
+    setData(updatedData)
+    toast.success(`Status updated to "${newStatus}" for ${ids.length} item(s)`)
+  }
+  
+
   const handleEdit = (id: string) => {
-    navigate(`/dashboard/content-creator/Route/edit/${id}`)
+    navigate(`/dashboard/${rolePath}/Route/edit/${id}`);
   }
 
   const handleDelete = (ids: string[]) => {
@@ -556,17 +569,19 @@ export default function RouteContentList() {
         ) : */}
         {data.length > 0 ? (
           <DataTable
-            columns={columns}
-            data={data}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-          />
+          columns={columns}
+          data={data}
+          onDelete={handleDelete}
+          onEdit={handleEdit}
+          onStatusChange={handleStatusChange} 
+        />
+        
         ) : (
           <div className="flex flex-col items-center justify-center h-48 bg-muted/10 rounded-lg border border-dashed">
             <p className="text-muted-foreground mb-2">No route content found</p>
             <Button
               variant="outline"
-              onClick={() => navigate('/dashboard/content-creator/Route')}
+              onClick={() => navigate('/dashboard/content-creator')}
               className="flex items-center gap-2"
             >
               <Plus size={16} /> Create your first route content
